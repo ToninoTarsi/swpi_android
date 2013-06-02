@@ -72,7 +72,7 @@ public class MainActivity extends Activity {
 		    switch(page)
 		    {
 		    	case 0:
-		    		urlPage = "file:///android_asset/main.html";
+		    		urlPage = "file:///android_asset/data.html?android=1";
 		    		break;
 			    case 1:
 			    	urlPage = station.URL +"/swpi_smartphone.html";
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 //			        startActivity(intWeb); 
 			        break;
 			    case 2:
-			    	urlPage = "file:///android_asset/gauge1.html";
+			    	urlPage = "file:///android_asset/wind.html?android=1";
 			    	break;
 //			    case 3:
 //			    	urlPage = "file:///android_asset/lcd.html";
@@ -239,13 +239,13 @@ public class MainActivity extends Activity {
 		    case R.id.ViewGauge1:
 		    	page = 2;
 		    	settings.edit().putInt("PAGE", 2).commit();  
-		    	urlPage = "file:///android_asset/gauge1.html";
+		    	urlPage = "file:///android_asset/wind.html?android=1";
 		    	myWebView.loadUrl(urlPage);
 		        return true;    
 		    case R.id.ViewMain:
 		    	page = 0;
 		    	settings.edit().putInt("PAGE", 0).commit();           	 
-		    	urlPage = "file:///android_asset/main.html";
+		    	urlPage = "file:///android_asset/data.html?android=1";
 		    	myWebView.loadUrl(urlPage);
 		        return true;      
 //		    case R.id.ViewLCD:
