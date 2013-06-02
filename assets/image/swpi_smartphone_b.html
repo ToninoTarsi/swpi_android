@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<head>
+  <meta charset="utf-8" />
+  <title>Sint Wind PI</title>
+  <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+  <link rel="apple-touch-icon" href="icons/icon_iphone_x1.png" />
+  <link rel="apple-touch-icon" sizes="72x72" href="icons/icon_ipad_x2.png" />
+  <link rel="apple-touch-icon" sizes="114x114" href="icons/icon_iphone_x2.png" />
+  <link rel="apple-touch-icon" sizes="144x144" href="icons/icon_ipad_x2.png" />
+  <script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+  <script src="custom.js"></script>
+  <script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style type="text/css">
+.max {
+color: red;
+}
+.min {
+color: lightblue;
+}
+</style>
+</head>
+
+<script>
+    var scroll = false;
+    var winDirGauge;
+	var windIntensityGustGauge;
+	var windGustIntensityGauge;
+	var tempGauge;
+	var pressureGauge;
+	var umidityGauge;
+
+	var tempInGauge;
+	var umidityInGauge;
+    var single1;
+
+
+function UpdateGauge(){
+	  //alert("Updating");
+      $.getJSON(
+         './meteo.txt',
+         function(data){
+				document.getElementById('wind_ave').innerHTML =	Math.round(data.wind_ave);
+				document.getElementById('wind_gust').innerHTML =	Math.round(data.wind_gust);
+				document.getElementById('wind_dir').innerHTML =	(data.wind_dir_code);
+				document.getElementById('temp_out').innerHTML =	Math.round(data.temp_out);
+				document.getElementById('pressure').innerHTML =	Math.round(data.rel_pressure);
+				document.getElementById('umidity').innerHTML =	Math.round(data.hum_out);
+				
+				document.getElementById("up-down").src="image/UpDown1Yellow.png";
+				if ( data.wind_trend > 10)
+					document.getElementById("up-down").src="image/arrow_up_red.png";
+				if ( data.wind_trend < -10)
+					document.getElementById("up-down").src="image/Button-Download-icon.png";
+
+				if ( data.wind_trend > 0)
+				{
+					document.getElementById('wind_trend').innerHTML = '+ ' + Math.round(data.wind_trend);
+				}
+				else
+				{
+					document.getElementById('wind_trend').innerHTML = '- ' + Math.abs(Math.round(data.wind_trend));
+				}
+				
+				document.getElementById('rain_rate').innerHTML =  Math.round((data.rain_rate * 10 )) / 10 ;
+				
+				
+				document.getElementById('coudbase').innerHTML = Math.round(data.cloud_base_altitude);
+
+				document.getElementById('last_measure_time').innerHTML =lastUpdate(data.last_measure_time) 
+			//alert("Updated");
+         }
+      );
+   }	
+	
+    function init() {
+
+		UpdateGauge();
+		setInterval(function(){UpdateGauge()},5000);
+
+		
+	}
+	
+ function lastUpdate(updatedata) {   
+	//funzione che calcola la differenza dall'ultimo aggiornamento dei dati da last_measure_time
+	//ottieni ora corrente
+	var myDate = new Date();
+	var year = myDate.getFullYear();
+	var month = myDate.getMonth();
+	if(month <= 9)
+		month = '0'+(month+1);
+	var day= myDate.getDate();
+	if(day <= 9)
+		day = '0'+day;
+		var hour= myDate.getHours();
+	if(hour<= 9)
+		hour = '0'+hour;
+	var minutes= myDate.getMinutes();
+	if(minutes<= 9)
+		minutes = '0'+minutes;
+	var seconds= myDate.getSeconds();
+	if(seconds<= 9)
+		seconds = '0'+seconds;
+	//var prettyDate = day +'/'+ month +'/'+ year +'-'+ hour +':'+ minutes +':'+ seconds;
+	//scrivi ora corrente
+	//document.write(prettyDate);
+
+
+	//converto ultimo aggiornamento in data
+
+	//var str="[02/04/2013-17:20:17]";
+	var str=updatedata;
+	var n=str.slice(1,20);
+
+	var n=n.split("-");
+	var daysplit=n[0].split("/");
+	var datesplit=n[1].split(":");
+
+	var day1=daysplit[0];
+	var month1=daysplit[1];
+	var year1=daysplit[2];
+
+
+	var hour1=datesplit[0];
+	var minutes1=datesplit[1];
+	var seconds1=datesplit[2];
+
+	//calcola la differenza
+
+	var date1 = new Date(year1, month1, day1,  hour1, minutes1, seconds1); // ora di lettura
+	var date2 = new Date(year, month, day, hour, minutes, seconds); // ora attuale
+	if (date2 < date1) {
+		date2.setDate(date2.getDate() + 1);
+	}
+	var diff = date2 - date1;
+
+	var msec = diff;
+	var hh = Math.floor(msec / 1000 / 60 / 60);
+	msec -= hh * 1000 * 60 * 60;
+	var mm = Math.floor(msec / 1000 / 60);
+	msec -= mm * 1000 * 60;
+	var ss = Math.floor(msec / 1000);
+	msec -= ss * 1000;
+
+	//scrivi il risultato
+	var result ="";
+	//result += "ultima misura: ";
+	if(hh != 0) {
+		result += hh;
+		result += "h, ";
+		}
+		
+	if(mm != 0) {
+		result +=  mm;
+		result +=  "m e ";
+		}
+	result += ss;
+	result += "s fa";
+
+	return result;
+
+  }  	
+	
+</script>
+
+
+
+<body onload="init()">
+  <div data-role="page" data-theme="a">
+    <div data-role="header">
+      <h1>Sint Wind PI</h1>
+    </div>
+    <div data-role="content">
+
+    <ul data-role="listview" data-inset="true" data-divider-theme="c">
+		<li data-role="list-divider"> <span style="font-size:100%"> <label  id="last_measure_time"></label>  </span> </li>
+		<li><a href="smartphone_wind.php"> <img src="image/Wind-Flag-Storm-icon.png"  height="64" width="64"> <span style="font-size:350%"> <label id="wind_dir"></label> - <label id="wind_ave"></label>(<label id="wind_gust"></label>) </span> </a></li>
+		<li><img src="image/UpDown1Yellow.png" id="up-down" height="64" width="64">  <span style="font-size:350%">  <label id="wind_trend"></label> </span> kmh/h </li>		
+        <li><a href="smartphone_temp.php">  <img src="image/temperature-3-icon.png"  height="64" width="64">  <span style="font-size:350%">  <label id="temp_out"></label> </span> °C  </a></li>
+		<li><a href="smartphone_pressure.php"> <img src="image/blood-pressure-icon.png"  height="64" width="64">    <span style="font-size:350%">  <label id="pressure"></label> </span> hPa</a></li>
+		<li><a href="smartphone_umidity.php"> <img src="image/water-icon.png"  height="64" width="64">  <span style="font-size:350%">  <label id="umidity"></label> </span>  %</a></li>
+		<li><a href="smartphone_cloud.php"> <img src="image/Status-weather-many-clouds-icon.png"  height="64" width="64">  <span style="font-size:350%">  <label id="coudbase"></label> </span> meters   </a></li>		
+		<li><a href="smartphone_rain.php"> <img src="image/rain-icon.png"  height="64" width="64">  <span style="font-size:350%">  <label id="rain_rate"></label> </span>  mm </a></li>		      <ul data-role="listview" data-inset="true" data-divider-theme="b">
+	</ul>
+		
+	<ul data-role="listview" data-inset="true" data-divider-theme="c">	
+        <li><a href="../index.php" rel="external"><span style="font-size:200%">Sito completo</span></a></li>
+    </ul>
+ 
+ </div>
+    <div data-role="footer">
+      <h4>Powered by Sint Wind Pi</h4>
+    </div>
+  </div> 
+</body>
+
+
+
+
+
+
+</html>

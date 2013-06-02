@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    
+    
+<!--         <item android:id="@+id/ViewLCD" android:title="@string/ViewLCD"></item> -->
+        <item android:id="@+id/ViewMain" android:title="@string/ViewData"></item>
+        <item android:id="@+id/ViewGauge1" android:title="@string/ViewGauge1"></item>
+        <item android:id="@+id/ViewWebcal" android:title="@string/ViewWebcam"></item>
+        <item android:id="@+id/Tel" android:title="@string/Tel"></item>
+        
+        
+</menu>

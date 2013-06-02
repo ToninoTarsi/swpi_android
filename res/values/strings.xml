@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sint Wind PI</string>
+    <string name="action_settings">Stazione</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_stations">SWPI - Stations</string>
+    <string name="title_activity_web">Sint Wind PI</string>
+    <string name="ViewData">Dati</string>
+    <string name="ViewWeb">Web</string>
+    <string name="ViewGauge1">Wind</string>
+    <string name="title_activity_gauge1">Sint Wind PI</string>
+    <string name="ViewLCD">LCD</string>
+    <string name="title_activity_web_cam">Sint Wind PI</string>
+    <string name="ViewWebcam">Webcam</string>
+    <string name="Tel">Tel</string>
+
+</resources>
