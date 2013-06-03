@@ -84,7 +84,7 @@ public class WebCamActivity extends Activity {
 //		myWebView.loadDataWithBaseURL("", html, "text/html", "UTF-8", "");
 		
 		
-		new DownloadImageTask((ScaleImageView) findViewById(R.id.imageView1)).execute(station.WEBCAM);
+		new DownloadImageTask( (ScaleImageView)findViewById(R.id.imageView1) ).execute(station.WEBCAM);
 		
 //		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
 //		URL url = null;

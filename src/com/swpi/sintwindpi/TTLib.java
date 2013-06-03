@@ -67,7 +67,7 @@ public class TTLib {
             xml = EntityUtils.toString(httpEntity);
                
     		// writing response to log
-    		Log.d("Http Response:", response.toString());
+            Log.d("Http Response:", xml);
     	} 
 		catch (ClientProtocolException e) 
 		{

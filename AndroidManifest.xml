@@ -2,15 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.swpi.sintwindpi"
     android:versionCode="1"
-    android:versionName="1.3" >
-
-    <uses-permission android:name="android.permission.INTERNET" />
+    android:versionName="1.4" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="9"
         android:targetSdkVersion="17" />
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"

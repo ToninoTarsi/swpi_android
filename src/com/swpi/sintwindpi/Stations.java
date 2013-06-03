@@ -2,6 +2,7 @@ package com.swpi.sintwindpi;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
@@ -19,6 +20,8 @@ import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
+
+
 import android.R.string;
 import android.app.Activity;
 import android.content.Context;
@@ -26,7 +29,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.XmlResourceParser;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,12 +49,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class Stations extends Activity {
+	private static final String TAG = "swpi-stations";
 	private ListView lv;
     private ItemAdapter adapter;
     private ArrayList<Station> stationlist = new ArrayList<Station>();
     
     
-	public class ItemAdapter extends ArrayAdapter<Station> {
+	private class ItemAdapter extends ArrayAdapter<Station> {
 
 		// declaring our ArrayList of items
 		private ArrayList<Station> objects;
@@ -129,30 +137,91 @@ public class Stations extends Activity {
 
 	}
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_stations);
-		
-		TTLib t = new TTLib();
-		
-		String xmlStations = t.getXMLStringFromUrl("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
- 
-        StationsXMLParser sp = new StationsXMLParser();
-        try {
-			stationlist = sp.parsexml(xmlStations);
-		} catch (XmlPullParserException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	private class DownloadXMLTask extends AsyncTask<String, Void, String> {
+		ListView lv;
+		public  DownloadXMLTask() {
 		}
+
+		protected String doInBackground(String... urls) {
+		String xml = "";
+			
+		try {
+	   		HttpClient httpClient = new DefaultHttpClient();
+    		// Creating HTTP Post
+    		//HttpPost httpPost = new HttpPost(url);
+    		HttpGet httpPost = new HttpGet(urls[0]);
+    		
+			HttpResponse response = httpClient.execute(httpPost);
+			HttpEntity httpEntity = response.getEntity();
+            xml = EntityUtils.toString(httpEntity);
+               
+    		// writing response to log
+    		Log.d(TAG, xml);
+    		return xml;
+    	} 
+		catch (ClientProtocolException e) 
+		{
+			// writing exception to log
+			e.printStackTrace();
+		} 
+        catch (IOException e) 
+        	{
+    			// writing exception to log
+    			e.printStackTrace();
+    		}
         
-        lv = (ListView) findViewById(R.id.listView1);
+			
+//		   URL textUrl;
+//			try {
+//				textUrl = new URL(urls[0]);
+//				BufferedReader bufferReader = new BufferedReader(new InputStreamReader(textUrl.openStream()));
+//				String StringBuffer;
+//				String stringText = "";
+//			 while ((StringBuffer = bufferReader.readLine()) != null) 
+//			 {
+//			 	stringText += StringBuffer;
+//			 }
+//			 bufferReader.close();
+//			 return stringText;
+//			           
+//		    } catch (MalformedURLException e) {
+//		     // TODO Auto-generated catch block
+//		    	e.printStackTrace();
+//		     
+//		    } catch (IOException e) {
+//		     // TODO Auto-generated catch block
+//		    	e.printStackTrace();
+//			     
+//			 }
+			
+			
+		    return "";
+		  }
+
+		  protected void onPostExecute(String result) {
+				String xmlStations = result;
+		        StationsXMLParser sp = new StationsXMLParser();
+		        try {
+					stationlist = sp.parsexml(xmlStations);
+				} catch (XmlPullParserException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		        initWidgets();
+		        adapter.notifyDataSetChanged();
+		        
+		  }
+		}
+	
+	
+	private void initWidgets() {
+		
+		lv = (ListView) findViewById(R.id.listView1);
         adapter = new ItemAdapter(this, R.layout.rowstationlayout, stationlist);
         lv.setAdapter(adapter);
-		
         
         lv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> arg0, View v, int pos,
@@ -183,6 +252,68 @@ public class Stations extends Activity {
 
             }
         });
+       
+    }
+	
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_stations);
+		
+//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+//		StrictMode.setThreadPolicy(policy);
+		
+//		TTLib t = new TTLib();
+//		String xmlStations = t.getXMLStringFromUrl("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
+// 
+//        StationsXMLParser sp = new StationsXMLParser();
+//        try {
+//			stationlist = sp.parsexml(xmlStations);
+//		} catch (XmlPullParserException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+        
+		new DownloadXMLTask().execute("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
+		
+//        lv = (ListView) findViewById(R.id.listView1);
+//        adapter = new ItemAdapter(this, R.layout.rowstationlayout, stationlist);
+//        lv.setAdapter(adapter);
+//		
+//        
+//        lv.setOnItemClickListener(new OnItemClickListener() {
+//            public void onItemClick(AdapterView<?> arg0, View v, int pos,
+//                    long arg3) 
+//            {
+//            	
+//            	Station st = stationlist.get(pos);
+//            	
+//            	 SharedPreferences settings  = getSharedPreferences("swpi_stations", 0);
+//            	 Editor edit = settings.edit();
+//            	 
+//            	 
+//            	 edit.putInt("ID",stationlist.get(pos).ID );
+//            	 edit.putString("NAME",stationlist.get(pos).NAME );
+//            	 edit.putFloat("LAT",stationlist.get(pos).LAT );
+//            	 edit.putFloat("LON",stationlist.get(pos).LON );
+//            	 edit.putString("URL",stationlist.get(pos).URL );
+//            	 edit.putString("WEBCAM",stationlist.get(pos).WEBCAM );
+//            	 edit.putString("TEL",stationlist.get(pos).TEL );
+//            	 edit.putString("NOTES",stationlist.get(pos).NOTES );
+//            	 edit.commit();
+//            	 
+//                 Toast.makeText(getApplicationContext(),stationlist.get(pos).NAME ,Toast.LENGTH_LONG).show();
+//                 
+//     			Intent intMain = new Intent(v.getContext(),MainActivity.class);
+//    			startActivity(intMain);
+//
+//
+//            }
+//        });
        
 		
 		
