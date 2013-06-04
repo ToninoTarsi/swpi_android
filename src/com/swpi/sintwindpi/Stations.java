@@ -57,41 +57,22 @@ public class Stations extends Activity {
     
 	private class ItemAdapter extends ArrayAdapter<Station> {
 
-		// declaring our ArrayList of items
 		private ArrayList<Station> objects;
 
-		/* here we must override the constructor for ArrayAdapter
-		* the only variable we care about now is ArrayList<Station> objects,
-		* because it is the list of objects we want to display.
-		*/
 		public ItemAdapter(Context context, int textViewResourceId, ArrayList<Station> objects) {
 			super(context, textViewResourceId, objects);
 			this.objects = objects;
 		}
 
-		/*
-		 * we are overriding the getView method here - this is what defines how each
-		 * list Station will look.
-		 */
 		public View getView(int position, View convertView, ViewGroup parent){
 
-			// assign the view we are converting to a local variable
 			View v = convertView;
-
-			// first check to see if the view is null. if so, we have to inflate it.
-			// to inflate it basically means to render, or show, the view.
+			
 			if (v == null) {
 				LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = inflater.inflate(R.layout.rowstationlayout, null);
 			}
 
-			/*
-			 * Recall that the variable position is sent in as an argument to this method.
-			 * The variable simply refers to the position of the current object in the list. (The ArrayAdapter
-			 * iterates through the list we sent it)
-			 * 
-			 * Therefore, i refers to the current Station object.
-			 */
 			Station i = objects.get(position);
 
 			SharedPreferences settings  = getSharedPreferences("swpi_stations", 0);
@@ -99,17 +80,9 @@ public class Stations extends Activity {
 			
 			if (i != null) {
 
-				// This is how you obtain a reference to the TextViews.
-				// These TextViews are created in the XML files we defined.
-
 				TextView TextViewID = (TextView) v.findViewById(R.id.ID);
 				TextView TextViewNANE = (TextView) v.findViewById(R.id.NAME);
-				
-				
-
-				// check to see if each individual textview is null.
-				// if not, assign some text!
-				
+					
 				ImageView im  = ( ImageView) v.findViewById(R.id.imageViewCheckBox);
 				
 				
@@ -130,7 +103,6 @@ public class Stations extends Activity {
 				}
 			}
 
-			// the view must be returned to our activity
 			return v;
 
 		}
@@ -169,32 +141,7 @@ public class Stations extends Activity {
     			// writing exception to log
     			e.printStackTrace();
     		}
-        
-			
-//		   URL textUrl;
-//			try {
-//				textUrl = new URL(urls[0]);
-//				BufferedReader bufferReader = new BufferedReader(new InputStreamReader(textUrl.openStream()));
-//				String StringBuffer;
-//				String stringText = "";
-//			 while ((StringBuffer = bufferReader.readLine()) != null) 
-//			 {
-//			 	stringText += StringBuffer;
-//			 }
-//			 bufferReader.close();
-//			 return stringText;
-//			           
-//		    } catch (MalformedURLException e) {
-//		     // TODO Auto-generated catch block
-//		    	e.printStackTrace();
-//		     
-//		    } catch (IOException e) {
-//		     // TODO Auto-generated catch block
-//		    	e.printStackTrace();
-//			     
-//			 }
-			
-			
+        			
 		    return "";
 		  }
 
@@ -214,7 +161,7 @@ public class Stations extends Activity {
 		        adapter.notifyDataSetChanged();
 		        
 		  }
-		}
+	}
 	
 	
 	private void initWidgets() {
@@ -261,62 +208,9 @@ public class Stations extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stations);
 		
-//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//		StrictMode.setThreadPolicy(policy);
-		
-//		TTLib t = new TTLib();
-//		String xmlStations = t.getXMLStringFromUrl("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
-// 
-//        StationsXMLParser sp = new StationsXMLParser();
-//        try {
-//			stationlist = sp.parsexml(xmlStations);
-//		} catch (XmlPullParserException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-        
 		new DownloadXMLTask().execute("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
 		
-//        lv = (ListView) findViewById(R.id.listView1);
-//        adapter = new ItemAdapter(this, R.layout.rowstationlayout, stationlist);
-//        lv.setAdapter(adapter);
-//		
-//        
-//        lv.setOnItemClickListener(new OnItemClickListener() {
-//            public void onItemClick(AdapterView<?> arg0, View v, int pos,
-//                    long arg3) 
-//            {
-//            	
-//            	Station st = stationlist.get(pos);
-//            	
-//            	 SharedPreferences settings  = getSharedPreferences("swpi_stations", 0);
-//            	 Editor edit = settings.edit();
-//            	 
-//            	 
-//            	 edit.putInt("ID",stationlist.get(pos).ID );
-//            	 edit.putString("NAME",stationlist.get(pos).NAME );
-//            	 edit.putFloat("LAT",stationlist.get(pos).LAT );
-//            	 edit.putFloat("LON",stationlist.get(pos).LON );
-//            	 edit.putString("URL",stationlist.get(pos).URL );
-//            	 edit.putString("WEBCAM",stationlist.get(pos).WEBCAM );
-//            	 edit.putString("TEL",stationlist.get(pos).TEL );
-//            	 edit.putString("NOTES",stationlist.get(pos).NOTES );
-//            	 edit.commit();
-//            	 
-//                 Toast.makeText(getApplicationContext(),stationlist.get(pos).NAME ,Toast.LENGTH_LONG).show();
-//                 
-//     			Intent intMain = new Intent(v.getContext(),MainActivity.class);
-//    			startActivity(intMain);
-//
-//
-//            }
-//        });
-       
-		
-		
+
 	}
 
 	@Override

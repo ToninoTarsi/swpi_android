@@ -1,6 +1,22 @@
 package com.swpi.sintwindpi;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.xmlpull.v1.XmlPullParserException;
+
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
@@ -21,6 +37,7 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -30,21 +47,55 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private int page;
 	SharedPreferences settings;
-	private boolean loadingFinished = true;
-	private boolean loadingStartd = false;
 	
-	public void UpdateData()
+	private class UpdateMeteoTask extends AsyncTask<String, Void, String> {
+		public  UpdateMeteoTask() {
+		}
+
+		protected String doInBackground(String... urls) {
+		    URL textUrl;
+		    try {
+			     textUrl = new URL(urls[0]);
+			     BufferedReader bufferReader = new BufferedReader(new InputStreamReader(textUrl.openStream()));
+			     String StringBuffer;
+			     String stringText = "";
+			     while ((StringBuffer = bufferReader.readLine()) != null) 
+			     {
+			     	stringText += StringBuffer;
+			     }
+			     bufferReader.close();
+			     return stringText;
+			           
+		    } catch (MalformedURLException e) {
+		    	e.printStackTrace();
+		     
+		    } catch (IOException e) {
+		    	e.printStackTrace();
+		    }
+		    return "";
+		}
+		     
+	  protected void onPostExecute(String result) {
+		  UpdateData(result);
+	  }
+	}
+	
+	
+	
+	public void UpdateData(String strjson)
 	{
-		
-		
+    	if ( strjson.startsWith("{") && strjson.endsWith("}")) {
+    		myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
+    		Log.d(TAG, "data updated " + strjson);
+    	}
+    	else {
+    		Log.d(TAG, "Bad json read");
+    	}
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-//		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-//		StrictMode.setThreadPolicy(policy);
 		
 		settings  = getSharedPreferences("swpi_stations", 0);
 		station.ID = settings.getInt("ID", 0);
@@ -52,9 +103,7 @@ public class MainActivity extends Activity {
 		if ( station.ID == 0)
 		{
 			Intent intStations = new Intent(this,Stations.class);
-			startActivity(intStations);
-			//setContentView(R.layout.activity_stations);
-			
+			startActivity(intStations);			
 		}
 		else
 		{
@@ -80,8 +129,6 @@ public class MainActivity extends Activity {
 		    		break;
 			    case 1:
 			    	urlPage = station.URL +"/swpi_smartphone.html";
-//			        Intent intWeb = new Intent(this,WebActivity.class);
-//			        startActivity(intWeb); 
 			        break;
 			    case 2:
 			    	urlPage = "file:///android_asset/wind.html?android=1";
@@ -96,11 +143,7 @@ public class MainActivity extends Activity {
 
 		    }
 		    
-		    		    
 		    setContentView(R.layout.activity_main);
-			
-
-
 			
 			myWebView = (WebView) findViewById(R.id.webView1);
 			myWebView.getSettings().setJavaScriptEnabled(true);
@@ -113,25 +156,13 @@ public class MainActivity extends Activity {
 				   Log.d(TAG, "Finished loading" + url);
 				   if ( page == 0  || page == 2)
 				   {
-					    String strjson = new TTLib().getTxtStringFromUrl(station.URL+"/meteo.txt" );
-		            	if ( strjson.startsWith("{") && strjson.endsWith("}")) 
-		            	{
-		            		myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-		            		
-		            	}
-		            	Log.d(TAG, "data updated " + strjson);
+					   new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );	
 				   }
 
 			    }
 			});
 
-			//myWebView.setWebChromeClient (new WebChromeClient  ());
-//			myWebView.setWebChromeClient(new WebChromeClient() {
-//				public void onPageFinished(WebView view, String url) {
-//					Log.d(TAG, "Finished loading");
-//				 }
-//			});
-			
+
 			myWebView.loadUrl(urlPage);
 			
 			

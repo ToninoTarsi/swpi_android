@@ -3,34 +3,36 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000000"
+    android:gravity="left"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/ID"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/NAME"
-        android:layout_alignParentLeft="true"
-        android:text="TextView"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/textsize_big" />
-    
-       <TextView
-           android:id="@+id/NAME"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_alignBottom="@+id/imageViewCheckBox"
-           android:layout_marginLeft="26dp"
-           android:layout_toRightOf="@+id/ID"
-           android:text="TextView"
-           android:textColor="#FFFFFF"
-           android:textSize="@dimen/textsize_big" />
+              <TextView
+                  android:id="@+id/ID"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignBaseline="@+id/NAME"
+                  android:layout_alignBottom="@+id/NAME"
+                  android:layout_alignParentLeft="true"
+                  android:text="99"
+                  android:textColor="#FFFFFF" />
 
               <ImageView
-        android:id="@+id/imageViewCheckBox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:src="@drawable/ic_checkbox" />
+                  android:id="@+id/imageViewCheckBox"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentRight="true"
+                  android:layout_alignTop="@+id/NAME"
+                  android:src="@drawable/ic_checkbox" />
+
+              <TextView
+                  android:id="@+id/NAME"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentTop="true"
+                  android:layout_marginTop="10dp"
+                  android:layout_toRightOf="@+id/ID"
+                  android:text="Monte Cucco ( PG)"
+                  android:textColor="#FFFFFF"
+                  android:textSize="@dimen/textsize_big" />
+
 </RelativeLayout>
