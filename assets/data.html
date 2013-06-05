@@ -255,7 +255,10 @@ function Update(data) {
 		
 	document.getElementById('TempOutMin').innerHTML =	(data.TempOutMin);
 	document.getElementById('TempOutMax').innerHTML =	(data.TempOutMax);
-	document.getElementById('wind_chill').innerHTML =	(data.wind_chill);
+	document.getElementById('temp_apparent').innerHTML =	(Math.round(data.temp_apparent*10))/10;
+	document.getElementById('wind_chill').innerHTML =	(Math.round(data.wind_chill*10))/10;
+
+	
 
 	document.getElementById('pressure_trend').innerHTML =	press_trend(data.pressure_trend);
 
@@ -273,8 +276,8 @@ function Update(data) {
 		document.getElementById('wind_trend').innerHTML = '- ' + Math.abs(Math.round(data.wind_trend));
 	}
 	
-	document.getElementById('temp_out').innerHTML =	Math.round((data.temp_out*10)/10);
-	document.getElementById('pressure').innerHTML =	Math.round(data.rel_pressure);
+	document.getElementById('temp_out').innerHTML =	 Math.round((data.temp_out * 10 ) ) /  10 ;
+	document.getElementById('pressure').innerHTML =	Math.round((data.rel_pressure * 10 ) ) /  10 ; 
 	document.getElementById('umidity').innerHTML =	Math.round(data.hum_out);
 
 	if ( data.rain_rate != null )
@@ -364,8 +367,9 @@ if (trend > 6.0)
 			<h1> <label  id="last_measure_time">time</label></h1><canvas  id="canvasLedUpdate" width="40" height="40"></canvas> 
 		</li>
        <li> <img src="image/thermometer.png">  
-	   			<p>Estremi di oggi : <label id="TempOutMin">TempOutMin</label>-<label id="TempOutMax">TempOutMax</label>°C</p> 
-			<h1><label id="temp_out">temp</label> °C - Perc. <label id="wind_chill">wc</label> °C</h1>
+	   		<p>Estremi di oggi : <label id="TempOutMin">TempOutMin</label>-<label id="TempOutMax">TempOutMax</label>°C</p> 
+			<h1><label id="temp_out">temp</label> °C - Perc. <label id="temp_apparent">wc</label> °C</h1>
+			<p>Wind Chill: <label id="wind_chill">wind_chill</label> °C</p> 
 		</li>
 		<li> <img src="image/Wind-Flag-Storm-icon.png"> 
 			<p>Estremi di oggi : <label id="winDayMin">winDayMin</label> -  <label id="winDayMax">winDayMax</label> <label id="lblUnits4"> <label id="lblUnits1">kmh</label></p> 

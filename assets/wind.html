@@ -258,8 +258,8 @@ function Update(data) {
 	winDirGauge.setValueAnimatedLatest(data.wind_dir);
 	winDirGauge.setValueAnimatedAverage(data.wind_dir_ave);
 	
-	document.getElementById('temp_out').innerHTML =	Math.round(data.temp_out);
-	document.getElementById('pressure').innerHTML =	Math.round(data.rel_pressure);
+	document.getElementById('temp_out').innerHTML =	 Math.round((data.temp_out * 10 ) ) /  10 ;
+	document.getElementById('pressure').innerHTML =	Math.round((data.rel_pressure * 10 ) ) /  10 ; 
 	document.getElementById('umidity').innerHTML =	Math.round(data.hum_out);
 	
 	
@@ -310,7 +310,7 @@ function Update(data) {
 	
 	
 	if ( data.rain_rate != null )
-		document.getElementById('rain_rate').innerHTML =  Math.round((data.rain_rate * 10 )) / 10 ;
+		document.getElementById('rain_rate').innerHTML =  Math.round((data.rain_rate * 10 ) ) /  10  ;
 	else
 		document.getElementById('rain_rate').innerHTML = '-';
 	
