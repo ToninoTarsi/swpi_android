@@ -4,12 +4,12 @@
         android:id="@+id/action_settings"
         android:orderInCategory="100"
         android:showAsAction="never"
-        android:title="@string/action_settings"/>
-    <item android:id="@+id/ViewWeb" android:title="@string/ViewWeb" ></item>
-    <item android:id="@+id/ViewGauge1" android:title="@string/ViewGauge1" ></item>
-    <item android:id="@+id/ViewMain" android:title="@string/ViewData"></item>
+        android:title="@string/action_settings" android:icon="@drawable/ic_menu_stations"/>
+    <item android:id="@+id/ViewWeb" android:title="@string/ViewWeb" android:icon="@drawable/ic_menu_web"></item>
+    <item android:id="@+id/ViewGauge1" android:title="@string/ViewGauge1" android:icon="@drawable/ic_menu_wind"></item>
+    <item android:id="@+id/ViewMain" android:title="@string/ViewData" android:icon="@drawable/ic_menu_data"></item>
 <!--     <item android:id="@+id/ViewLCD" android:title="@string/ViewLCD"></item> -->
-        <item android:id="@+id/Tel" android:title="@string/Tel"></item>
+        <item android:id="@+id/Tel" android:title="@string/Tel" android:icon="@drawable/ic_menu_tel"></item>
     
 
 </menu>
