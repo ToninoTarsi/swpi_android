@@ -218,13 +218,23 @@ function init() {
 	}
 	
 
+
 function UpdateTime()
 {
+	
+	//alert("pp");
+	
 	if ( data.last_measure_time != null ) {
 		
 		var dif = getLastMeasureDelay(data.last_measure_time);
-		if ( dif > 900 ) {
+		
+		if ( dif > 1000 ) {
 			ledUpdate.setLedColor(steelseries.LedColor.RED_LED);
+			ledUpdate.setLedOnOff(true);
+			ledUpdate.blink(false);
+		}
+		else if ( dif > 180 ) {
+			ledUpdate.setLedColor(steelseries.LedColor.YELLOW_LED);
 			ledUpdate.setLedOnOff(true);
 			ledUpdate.blink(false);
 		}
@@ -240,10 +250,7 @@ function UpdateTime()
 }
 
 
-
-
-function Update(data)
-{
+function Update(data) {
 	ledUpdate.setLedColor(steelseries.LedColor.BLUE_LED);
 
 	document.getElementById('lblTitle').innerHTML = data.station_name;
@@ -317,8 +324,7 @@ function Update(data)
 }
 	
 	
-function UpdateData(json)
-{
+function UpdateData(json) {
 	data = jQuery.parseJSON(json);
 	Update(data);
 }
