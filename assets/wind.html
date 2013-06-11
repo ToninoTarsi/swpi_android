@@ -25,25 +25,25 @@
  
  #foot{
   position: absolute;
-  top: 460px;
+  top: 490px;
   left:20px;
-  width:100%;
+  width:90%;
 
 }  
  
 #canvasRadial1{
   position: absolute;
-  width: 280px;
+  width: 300px;
   display: block;
   margin:0px auto;
-  left:20px;
+  
 
 }  
  
 #grid{
   position: absolute;
-  top: 365px;
-  width:100%;
+  top: 390px;
+  width:90%;
 
 }  
  #canvasLedUpdate {
@@ -162,7 +162,7 @@ function setWinDirSize(size)
 function init() {
 
 
-		WinDirSize	= 280;
+		WinDirSize	= 300;
 		setWinDirSize(WinDirSize);
 	   
 		ledUpdate = new steelseries.Led('canvasLedUpdate', {
@@ -231,7 +231,7 @@ function init() {
 		setInterval(function(){UpdateTime()},1000);
 
 
-		if ( getParameterByName("android") == "" ) {	
+		if ( getParameterByName("update") != "" ) {	
 			//alert('Reading meteo');		
 			setInterval(function(){UpdateGauge()()},10000);
 			UpdateGauge();
@@ -240,13 +240,9 @@ function init() {
 
 	}
 	
-
-
 function UpdateTime()
 {
-	
-	//alert("pp");
-	
+	//alert("pp");	
 	if ( data.last_measure_time != null ) {
 		
 		var dif = getLastMeasureDelay(data.last_measure_time);
@@ -266,14 +262,13 @@ function UpdateTime()
 			ledUpdate.setLedOnOff(true);
 			ledUpdate.blink(false);
 		}
-		
 		document.getElementById('last_measure_time').innerHTML =lastUpdate(data.last_measure_time)
-
 	}
 }
 
 
 function Update(data) {
+	
 	ledUpdate.setLedColor(steelseries.LedColor.BLUE_LED);
 
 	document.getElementById('lblTitle').innerHTML = data.station_name;

@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Point;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
@@ -51,6 +53,9 @@ public class MainActivity extends Activity {
 	private static final String TAG = "MainActivity";
 	private int page;
 	private SharedPreferences settings;
+	private int width ;
+	private int height ;
+	
 	
 	public boolean haveNetworkConnection() {
 	    boolean haveConnectedWifi = false;
@@ -114,10 +119,17 @@ public class MainActivity extends Activity {
     	}
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		DisplayMetrics metrics = this.getResources().getDisplayMetrics();
+		width = metrics.widthPixels;
+		height = metrics.heightPixels;
+				
+		Toast.makeText(MainActivity.this, "Loading (" + Integer.toString(width) + ")",Toast.LENGTH_LONG).show();
+
 		boolean bNet = haveNetworkConnection() ;
 		if ( ! bNet) {
 			AlertDialog.Builder builder=new AlertDialog.Builder(this);
@@ -164,13 +176,19 @@ public class MainActivity extends Activity {
 		    switch(page)
 		    {
 		    	case 0:
-		    		urlPage = "file:///android_asset/data.html?android=1";
+		    		if ( width > 480 )
+		    			urlPage = "file:///android_asset/data480.html";
+		    		else
+		    			urlPage = "file:///android_asset/data.html";
 		    		break;
 			    case 1:
 			    	urlPage = station.URL +"/swpi_smartphone.html";
 			        break;
 			    case 2:
-			    	urlPage = "file:///android_asset/wind.html?android=1";
+			    	if ( width > 480 )
+			    		urlPage = "file:///android_asset/wind480.html";
+			    	else
+			    		urlPage = "file:///android_asset/wind.html";
 			    	break;
 //			    case 3:
 //			    	urlPage = "file:///android_asset/lcd.html";
@@ -325,16 +343,16 @@ public class MainActivity extends Activity {
 //		        Intent intWeb = new Intent(this,WebActivity.class);
 //		        startActivity(intWeb);
 		        return true;        
-		    case R.id.ViewGauge1:
+		    case R.id.ViewGauge1: 
 		    	page = 2;
 		    	settings.edit().putInt("PAGE", 2).commit();  
-		    	urlPage = "file:///android_asset/wind.html?android=1";
+		    	urlPage = "file:///android_asset/wind.html";
 		    	myWebView.loadUrl(urlPage);
 		        return true;    
 		    case R.id.ViewMain:
 		    	page = 0;
 		    	settings.edit().putInt("PAGE", 0).commit();           	 
-		    	urlPage = "file:///android_asset/data.html?android=1";
+		    	urlPage = "file:///android_asset/data.html";
 		    	myWebView.loadUrl(urlPage);
 		        return true;      
 //		    case R.id.ViewLCD:

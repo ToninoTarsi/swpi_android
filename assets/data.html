@@ -94,7 +94,7 @@ function init() {
 	
 	setInterval(function(){UpdateTime()},1000);
 	
-	if ( getParameterByName("android") == "" ) {	
+	if ( getParameterByName("update") != "" ) {	
 		//alert('Reading meteo');		
 		setInterval(function(){UpdateGauge()()},10000);
 		UpdateGauge();
@@ -361,47 +361,49 @@ if (trend > 6.0)
       <h1><label id="lblTitle">Sint Wind PI</label></h1>
     </div>
     <div data-role="content">
-
+	
+	
     <ul data-role="listview" data-inset="true" data-divider-theme="b">
 		<li data-role="list-divider"> 
-			<h1> <label  id="last_measure_time">time</label></h1><canvas  id="canvasLedUpdate" width="40" height="40"></canvas> 
+			<h1> <span style="font-size:120%"> <label  id="last_measure_time">time</label></h1><canvas  id="canvasLedUpdate" width="40" height="40"></canvas> 
 		</li>
        <li> <img src="image/thermometer.png">  
-	   		<p>Estremi di oggi : <label id="TempOutMin">TempOutMin</label>-<label id="TempOutMax">TempOutMax</label>°C</p> 
-			<h1><label id="temp_out">temp</label> °C - Perc. <label id="temp_apparent">wc</label> °C</h1>
-			<p>Wind Chill: <label id="wind_chill">wind_chill</label> °C</p> 
+	   		<p><span style="font-size:110%">Estremi di oggi : <label id="TempOutMin">TempOutMin</label>-<label id="TempOutMax">TempOutMax</label>°C</p> 
+			<h1><span style="font-size:100%"> <label id="temp_out">temp</label> °C - Perc. <label id="temp_apparent">wc</label> °C</h1>
+			<p><span style="font-size:110%">Wind Chill: <label id="wind_chill">wind_chill</label> °C</p> 
 		</li>
 		<li> <img src="image/Wind-Flag-Storm-icon.png"> 
-			<p>Estremi di oggi : <label id="winDayMin">winDayMin</label> -  <label id="winDayMax">winDayMax</label> <label id="lblUnits4"> <label id="lblUnits1">kmh</label></p> 
-			<h1><label id="wind_dir">dir</label> - <label id="wind_ave">ave</label> (<label id="wind_gust">gust</label>) <label id="lblUnits2">kmh</label></label> </h1>
-			<p >Tendenza : <label id="wind_trend">trend</label> <label id="lblUnits3">kmh</label>/h </p> 
+			<p><span style="font-size:110%">Estremi di oggi : <label id="winDayMin">winDayMin</label> -  <label id="winDayMax">winDayMax</label> <label id="lblUnits4"> <label id="lblUnits1">kmh</label></p> 
+			<h1><span style="font-size:120%"> <label id="wind_dir">dir</label> - <label id="wind_ave">ave</label> (<label id="wind_gust">gust</label>) <label id="lblUnits2">kmh</label></label> </h1>
+			<p ><span style="font-size:110%">Tendenza : <label id="wind_trend">trend</label> <label id="lblUnits3">kmh</label>/h </p> 
 		</li>
  
 		<li> <img src="image/blood-pressure-icon.png"  >    
-			<h2><label id="pressure">pres</label>  hPa</h2>
-			<p> <label id="pressure_trend">pressure_trend</label>  </p> 
+			<h2><span style="font-size:120%"> <label id="pressure">pres</label>  hPa</h2>
+			<p> <span style="font-size:110%"><label id="pressure_trend">pressure_trend</label>  </p> 
 
 		</li>
 		<li> <img src="image/water-icon.png"  > 
-			 <p>Estremi di oggi : <label id="UmOutMin">UmOutMin</label> -  <label id="UmOutMax">UmOutMax</label> % </p> 
-			<h2><label id="umidity">hum</label> </span>  %</h2>
-			<p>P. Rugiada : <label id="dew_point">dew_point</label> °C  </p> 
+			 <p><span style="font-size:110%">Estremi di oggi : <label id="UmOutMin">UmOutMin</label> -  <label id="UmOutMax">UmOutMax</label> % </p> 
+			<h2><span style="font-size:120%"> <label id="umidity">hum</label>   %</h2>
+			<p><span style="font-size:110%">P. Rugiada : <label id="dew_point">dew_point</label> °C  </p> 
 		</li>
 		<li> <img src="image/rain-icon.png"  > 
-			<p>Pioggia</p>
-		  <h1>Oggi <label id="rain_rate">rain</label> </span>  mm </h1>
-		  <p>24h : <label id="rain_rate_24h">rain_rate_24h</label>mm - 1h : <label id="rain_rate_1h">rain_rate_1h</label> mm </p>
+			<p><span style="font-size:110%">Pioggia</p>
+		  <h1><span style="font-size:120%"> Oggi <label id="rain_rate">rain</label>   mm </h1>
+		  <p><span style="font-size:110%">24h : <label id="rain_rate_24h">rain_rate_24h</label>mm - 1h : <label id="rain_rate_1h">rain_rate_1h</label> mm </p>
 		</li>		      
 		<li> <img src="image/Status-weather-many-clouds-icon.png"  > 
-			<p>Base cumulo</p>
-			<h2><label id="coudbase">cb</label> </span> metri   </h2>
+			<p><span style="font-size:110%">Base cumulo</p>
+			<h2><span style="font-size:120%"> <label id="coudbase">cb</label>  metri   </h2>
 		</li>		
 		<li> <img src="image/ic_swpi.png"  > 
-			<p>Sistema</p>
-			<h1>T: <label id="temp_in">temp_in</label> °C - Um: : <label id="hum_in">hum_in</label> %  </h1>
+			<p><span style="font-size:110%">Sistema</p>
+			<h1><span style="font-size:120%"> T: <label id="temp_in">temp_in</label> °C - Um: : <label id="hum_in">hum_in</label> %  </h1>
 		</li>		
 		</ul>
 		
+		</span>
  </div>
     <div data-role="footer">
       <h4>Powered by Sint Wind Pi</h4>
