@@ -16,11 +16,15 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.StrictMode;
 import android.util.Log;
 
 public class TTLib {
-
+	
+	
 	public String getTxtStringFromUrl(String url) 
 	{
 	    URL textUrl;

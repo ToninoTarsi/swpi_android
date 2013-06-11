@@ -31,6 +31,8 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.XmlResourceParser;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -59,6 +61,7 @@ public class Stations extends Activity {
 
 		private ArrayList<Station> objects;
 
+		
 		public ItemAdapter(Context context, int textViewResourceId, ArrayList<Station> objects) {
 			super(context, textViewResourceId, objects);
 			this.objects = objects;

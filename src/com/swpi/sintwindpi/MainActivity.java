@@ -15,6 +15,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.xmlpull.v1.XmlPullParserException;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,7 +24,9 @@ import android.os.Handler;
 import android.os.StrictMode;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -46,7 +50,24 @@ public class MainActivity extends Activity {
 	private  WebView myWebView;
 	private static final String TAG = "MainActivity";
 	private int page;
-	SharedPreferences settings;
+	private SharedPreferences settings;
+	
+	public boolean haveNetworkConnection() {
+	    boolean haveConnectedWifi = false;
+	    boolean haveConnectedMobile = false;
+
+	    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+	    NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+	    for (NetworkInfo ni : netInfo) {
+	        if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+	            if (ni.isConnected())
+	                haveConnectedWifi = true;
+	        if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+	            if (ni.isConnected())
+	                haveConnectedMobile = true;
+	    }
+	    return haveConnectedWifi || haveConnectedMobile;
+	}
 	
 	private class UpdateMeteoTask extends AsyncTask<String, Void, String> {
 		public  UpdateMeteoTask() {
@@ -96,6 +117,24 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		boolean bNet = haveNetworkConnection() ;
+		if ( ! bNet) {
+			AlertDialog.Builder builder=new AlertDialog.Builder(this);
+			builder.setTitle("Errore");
+			builder.setMessage("Sint Wind PI ha bisogno di una connessione attiva per funzionare");
+			builder.setCancelable(true);
+			builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		               // User cancelled the dialog
+		           }
+		       });
+
+			builder.create();
+			builder.show();
+
+			
+		}
 		
 		settings  = getSharedPreferences("swpi_stations", 0);
 		station.ID = settings.getInt("ID", 0);
@@ -150,17 +189,31 @@ public class MainActivity extends Activity {
 
 
 
-			myWebView.setWebViewClient(new WebViewClient() {
-			   @Override
-			   public void onPageFinished(WebView view, String url) {
-				   Log.d(TAG, "Finished loading" + url);
-				   if ( page == 0  || page == 2)
-				   {
-					   new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );	
-				   }
+//			myWebView.setWebViewClient(new WebViewClient() {
+//			   @Override
+//			   public void onPageFinished(WebView view, String url) {
+//				   Log.d(TAG, "Finished loading" + url);
+//				   if ( page == 0  || page == 2)
+//				   {
+//					   new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );	
+//				   }
+//
+//			    }
+//			});
+			
+			
+			myWebView.setWebChromeClient(new WebChromeClient() {
+	            public void onProgressChanged(WebView view, int progress)
+	            {
 
-			    }
-			});
+	                if(progress == 100 && ( page == 0  || page == 2 )){
+	                	new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
+	                	myWebView.refreshDrawableState();
+	                }
+
+	            }
+
+	        });
 
 
 			myWebView.loadUrl(urlPage);
@@ -247,6 +300,7 @@ public class MainActivity extends Activity {
 	    return super.onKeyDown(keyCode, event);
 	}
 	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

@@ -23,6 +23,29 @@
      margin-right: 0px ;
    }
  
+ #foot{
+  position: absolute;
+  top: 460px;
+  left:20px;
+  width:100%;
+
+}  
+ 
+#canvasRadial1{
+  position: absolute;
+  width: 280px;
+  display: block;
+  margin:0px auto;
+  left:20px;
+
+}  
+ 
+#grid{
+  position: absolute;
+  top: 365px;
+  width:100%;
+
+}  
  #canvasLedUpdate {
   position: absolute;
   top: 0px;
@@ -522,16 +545,13 @@ function getLastMeasureDelay(updatedata)
 <!-- 			<canvas  id="canvasLedGreen4" width="40" height="40"></canvas> -->
 <!-- 			<canvas  id="canvasLedGreen5" width="40" height="40"></canvas> -->
 			
-			<p align="center"> 
+			<div align="center"> 
 			
-		
-		
-	
-				<canvas id="canvasRadial1" >
+				<canvas  id="canvasRadial1"  width="280" height="280"></canvas>
 				
-			</p>
+			</div>
 		
-			<div class="ui-grid-d">
+			<div id="grid" class="ui-grid-d">
 				<div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/temperatura.png" width="32" height"32"  ><br><label id="temp_out">temp</label> °C</div></div>
 				<div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/blood-pressure-icon.png" width="32" height"32" > <br> <label id="pressure">pres</label> hPa</div></div>
 				<div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/water-icon.png" width="32" height"32" > <br> <label id="umidity">hum</label>   %</div></div>
@@ -544,7 +564,7 @@ function getLastMeasureDelay(updatedata)
 		</div>
 	
 		 
-    <div data-role="footer"> 
+    <div id="foot" data-role="footer"> 
         <h3>Powered by Sint Wind Pi </h3> 
         <a style="text-align: center;" href="help_wind.html" data-rel="dialog">Help</a> 
     </div><!-- /footer -->
