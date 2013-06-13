@@ -346,13 +346,19 @@ public class MainActivity extends Activity {
 		    case R.id.ViewGauge1: 
 		    	page = 2;
 		    	settings.edit().putInt("PAGE", 2).commit();  
-		    	urlPage = "file:///android_asset/wind.html";
+		    	if ( width > 480 )
+		    		urlPage = "file:///android_asset/wind480.html";
+		    	else
+		    		urlPage = "file:///android_asset/wind.html";
 		    	myWebView.loadUrl(urlPage);
 		        return true;    
 		    case R.id.ViewMain:
 		    	page = 0;
 		    	settings.edit().putInt("PAGE", 0).commit();           	 
-		    	urlPage = "file:///android_asset/data.html";
+	    		if ( width > 480 )
+	    			urlPage = "file:///android_asset/data480.html";
+	    		else
+	    			urlPage = "file:///android_asset/data.html";
 		    	myWebView.loadUrl(urlPage);
 		        return true;      
 //		    case R.id.ViewLCD:
