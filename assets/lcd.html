@@ -179,6 +179,8 @@ var year = myDate.getFullYear();
 var month = myDate.getMonth();
 if(month <= 9)
     month = '0'+(month+1);
+else
+    month = (month+1);
 var day= myDate.getDate();
 if(day <= 9)
     day = '0'+day;

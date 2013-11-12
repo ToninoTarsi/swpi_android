@@ -47,7 +47,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	private static final int LAUNCH_SETTINGS = 1;
+	
 	private Station station = new Station();
+	
 	private String urlPage = "";
 	private  WebView myWebView;
 	private static final String TAG = "MainActivity";
@@ -56,6 +60,8 @@ public class MainActivity extends Activity {
 	private int width ;
 	private int height ;
 	
+	private int Audio_repetition_time;
+	private boolean bAudio;
 	
 	public boolean haveNetworkConnection() {
 	    boolean haveConnectedWifi = false;
@@ -117,6 +123,8 @@ public class MainActivity extends Activity {
     	else {
     		Log.d(TAG, "Bad json read");
     	}
+    	
+
 	}
 	
 	@SuppressWarnings("deprecation")
@@ -167,6 +175,9 @@ public class MainActivity extends Activity {
 			station.WEBCAM = settings.getString("WEBCAM", "");
 			station.TEL = settings.getString("TEL", "");
 			station.NOTES = settings.getString("NOTES", "");
+			
+			bAudio = getSharedPreferences("preferences", 0).getBoolean("bAudio", true);
+			Audio_repetition_time = getSharedPreferences("preferences", 0).getInt("Audio_repetition_time",5);
 			
 //		    PAGE 0 - Dati
 //		    PAGE 1 - WEB
@@ -268,6 +279,18 @@ public class MainActivity extends Activity {
 			    }
 			};
 			thread.start();
+			
+			
+//			if (bAudio ) {
+//				Thread threadAudio = new Thread() {
+//				    @Override
+//				    public void run() {
+//				    	
+//				    	Thread.sleep(sleepTime);
+//				    }
+//				};
+//				threadAudio.start();
+//			}
 
 
 			
@@ -376,16 +399,30 @@ public class MainActivity extends Activity {
 		    	String ntel = "tel:" + station.TEL;
 		    	callIntent.setData(Uri.parse(ntel));
 		    	startActivity(callIntent);
+		    	return true; 
+		    case R.id.settings:
+		        Intent intPref = new Intent(this,SettingsActivity.class);
+		        startActivityForResult(intPref,LAUNCH_SETTINGS);
+		        return true;        		
 
-
-		        return true;    		     
-		        
-		        
-		        
-		        
+		           		     
+		            
 	    }
 	    return false;
 	}
 	
-	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		
+		super.onActivityResult(requestCode, resultCode, data);
+		
+	    // Check which request we're responding to
+		//GetApplicationSettings();
+	    if (requestCode == LAUNCH_SETTINGS) {
+	        // Make sure the request was successful
+	        if (resultCode == 0) {
+
+	        }
+	    }
+	}
 }
