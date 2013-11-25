@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+     <PreferenceCategory android:title="Audio" >
+       
+       <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="bAudio"
+            android:summary=""
+            android:title="Audio" >
+        </CheckBoxPreference>
+        
+        <EditTextPreference
+                android:numeric="integer"
+                android:title="Audio repetition time (min)"
+                android:summary=""
+                android:defaultValue= "5"
+                android:key="Audio_repetition_time"/>  
+    </PreferenceCategory>
+    
+</PreferenceScreen>
+

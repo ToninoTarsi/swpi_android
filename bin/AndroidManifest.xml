@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.swpi.sintwindpi"
     android:versionCode="1"
-    android:versionName="1.12" >
+    android:versionName="1.13" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -11,7 +11,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+	<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" /> 
+	
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -35,9 +36,16 @@
             android:label="@string/title_activity_web_cam" >
         </activity>
         <activity
-            android:name="com.swpi.sintwindpi.SettingsActivity"
+            android:name="com.swpi.sintwindpi.UserSettingActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+        
+        <service
+            android:name="com.swpi.sintwindpi.MeteoService"
+            android:enabled="true"
+            android:exported="false"
+            android:label="MeteoService" />
+        
     </application>
 
 </manifest>
