@@ -245,7 +245,7 @@ public class MainActivity extends Activity {
 //		    PAGE 1 - WEB
 //		    PAGE 2 = Wind
 //		    PAGE 3 = LCD
-//		    PAGE 4 = WEBCAM
+//		    PAGE 4 = WEBCAM 
 		    switch(page)
 		    {
 		    	case 0:
