@@ -57,8 +57,7 @@ public class TTLib {
 	
 	public String getXMLStringFromUrl(String url) {
         String xml = null;
-        
-        
+
         try 
         {
     		HttpClient httpClient = new DefaultHttpClient();
