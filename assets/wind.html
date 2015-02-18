@@ -40,11 +40,26 @@
 
 }  
  
+
+ #lineRED{
+  position: absolute;
+  top: 350px;
+  width:90%;
+  left:10px;;
+}  
+
+#lineBLUE{
+  position: absolute;
+  top: 350px;
+  width:90%;
+  right:10px;;
+}  
+ 
+ 
 #grid{
   position: absolute;
   top: 390px;
   width:90%;
-
 }  
  #canvasLedUpdate {
   position: absolute;
@@ -118,6 +133,11 @@
 </style>
 	
 </head>
+
+
+
+
+
 <script type="text/javascript">
 
 var data;
@@ -544,12 +564,16 @@ function getLastMeasureDelay(updatedata)
 <!-- 			<canvas  id="canvasLedGreen4" width="40" height="40"></canvas> -->
 <!-- 			<canvas  id="canvasLedGreen5" width="40" height="40"></canvas> -->
 			
+			
+			
+			
+			
 			<div align="center"> 
 			
 				<canvas  id="canvasRadial1"  width="280" height="280"></canvas>
 				
 			</div>
-		
+			
 			<div id="grid" class="ui-grid-d">
 				<div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/temperatura.png" width="32" height"32"  ><br><label id="temp_out">temp</label> °C</div></div>
 				<div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/blood-pressure-icon.png" width="32" height"32" > <br> <label id="pressure">pres</label> hPa</div></div>

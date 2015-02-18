@@ -240,6 +240,7 @@ public class MainActivity extends Activity {
 			station.NOTES = settings.getString("NOTES", "");
 			
 
+
 			
 //		    PAGE 0 - Dati
 //		    PAGE 1 - WEB
