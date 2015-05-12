@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -21,7 +23,9 @@ import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetFileDescriptor;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -32,14 +36,16 @@ import android.widget.Toast;
 
 public class MeteoService extends Service{
 
+	private long lastAudioTime = 0;
 	private String strjson;
 	private static final String TAG = "MeteoService";
 	String meteo_file;
-	
+	private boolean isPlayingAudio = false;
 	
 	private class AsynGetMeteo extends AsyncTask<String, Void, String> {
 		public  AsynGetMeteo() {
 		}
+		
 		
 		private int n = 0;
 		protected String doInBackground(String... urls) {
@@ -55,22 +61,80 @@ public class MeteoService extends Service{
 			}
 	    	return ret;	
 		}
+		
+		
 		protected void onPostExecute(String result) {
     		try {
 				JSONObject jObject = new JSONObject(result);
 				strjson = result;
 	    		SendMeteo(strjson);
 	    		
+	    		String last_measure_time = jObject.getString("last_measure_time");
+	    		//Log.d("AUDIO",last_measure_time);
 	    		
-//				SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//				boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-//				int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
-//				
-//				if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
+	    		SimpleDateFormat  format = new SimpleDateFormat("[dd/MM/yyyy-HH:mm:ss]");  
+	    		Date theMeteoDate = null;
+	    		try {  
+	    			theMeteoDate =  format.parse(last_measure_time);  
+ 
+	    		} catch (java.text.ParseException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					//Log.d("AUDIO","ERROR");
+					return;
+				}
+	    		
+	    		//Log.d("AUDIO",theMeteoDate.toString());
+	    		
+	    		Date theNowDate = new Date();
+
+	    		//Log.d("AUDIO",theNowDate.toString());
+	    				
+	    		long diff = ( theNowDate.getTime() - theMeteoDate.getTime() ) / (1000 * 60);
+	    		
+	    		
+	    		//Log.d("AUDIO",Long.toString(diff));
+	    		
+
+	    		if ( diff > 10 ) 
+	    			return;
+	    		
+	    		
+	    		final SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+	    		final boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
+	    		final int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+	    		if ( bAudio ) {
+	    			//Log.d("AUDIO","audio");
+					Thread thread = new Thread() {
+					    @Override
+					    public void run() {
+							//SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+							//boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
+							//int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+							long audioTime = System.currentTimeMillis();
+							//Log.d("AUDIO",Long.toString( audioTime- lastAudioTime));
+							if ( bAudio &&  ( (audioTime -  lastAudioTime) + 30 >  Audio_repetition_time*60*1000 )  ) {
+								lastAudioTime = audioTime;
+								try {
+									playaudio(strjson);
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+							n++; 
+					    }
+					};
+
+					thread.start();
+	    		}
+				
+
+//				long audioTime = System.currentTimeMillis();
+//				if ( bAudio &&  ( audioTime -  lastAudioTime >  Audio_repetition_time*1000 )  ) {
+//					lastAudioTime = audioTime;
 //					try {
 //						playaudio(strjson);
 //					} catch (JSONException e) {
-//						// TODO Auto-generated catch block
 //						e.printStackTrace();
 //					}
 //				}
@@ -223,31 +287,33 @@ public class MeteoService extends Service{
 	}
 	
 	
-	private void playaudio(JSONObject jObject) throws JSONException {
-		
-		String wind_dir_code  = jObject.getString("wind_dir_code");
-		String wind_ave  = jObject.getString("wind_ave");
-		String wind_gust  = jObject.getString("wind_gust");
-
-		String str;
-		str = "winddirection.mp3";
-		playmp3(str);
-		str = wind_dir_code.toLowerCase()+".mp3";
-		playmp3(str);
-		str = "from.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
-		playmp3(str);
-		str = "to.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
-		playmp3(str);
-
-	}
+//	private void playaudio(JSONObject jObject) throws JSONException {
+//		
+//		String wind_dir_code  = jObject.getString("wind_dir_code");
+//		String wind_ave  = jObject.getString("wind_ave");
+//		String wind_gust  = jObject.getString("wind_gust");
+//
+//		String str;
+//		str = "winddirection.mp3";
+//		playmp3(str);
+//		str = wind_dir_code.toLowerCase()+".mp3";
+//		playmp3(str);
+//		str = "from.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
+//		playmp3(str);
+//		str = "to.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
+//		playmp3(str);
+//
+//	}
 	
 	public void playmp3(String strMp3) {
 	    try {
-
+	    	if ( isPlayingAudio )
+	    		return;
+	    	isPlayingAudio = true;
 	    	MediaPlayer m = new MediaPlayer();
 	        AssetFileDescriptor descriptor = getAssets().openFd("audio/"+strMp3);
 	        m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
@@ -256,12 +322,17 @@ public class MeteoService extends Service{
 	        m.prepare();
 	        m.setVolume(1f, 1f);
 	        m.setLooping(false);
+	        m.setAudioStreamType(AudioManager.STREAM_MUSIC);
 	        m.start();
+
 	        while ( m.isPlaying() ) {
 	        	Thread.sleep(10);
 	        }
-	        	
+	        Thread.sleep(200);
+	        m.release();	
+	        isPlayingAudio = false;
 	    } catch (Exception e) {
+	    	isPlayingAudio = false;
 	    }
 	}
 	

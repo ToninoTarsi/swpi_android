@@ -21,6 +21,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 
 
+
+
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
@@ -41,8 +43,13 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Point;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
@@ -55,6 +62,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -90,19 +98,21 @@ public class MainActivity extends Activity {
         	Log.d(TAG,"myServiceReceiver");
         	
         	
-			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-			boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-			int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+//			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+//			boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
+//			int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+//			
+//			if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
+//				try {
+//					playaudio(strjson);
+//				} catch (JSONException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//			n++;
 			
-			if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
-				try {
-					playaudio(strjson);
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			n++;
+			
         }
 	};
 	
@@ -607,7 +617,27 @@ public class MainActivity extends Activity {
 //		        Intent intPref = new Intent(this,UserSettingActivity.class);
 //		        startActivity(intPref);
 		        return true;        		
-
+		    case R.id.item1:
+				 AlertDialog.Builder alertDialog = new AlertDialog.Builder(this);
+				 PackageInfo pInfo;
+				try {
+					pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+					String version = pInfo.versionName;
+					final TextView message = new TextView(getBaseContext());
+					final SpannableString s =  new SpannableString("              Version " + version + "\n" + "http://www.VoloLiberoMonteCucco.it");
+					Linkify.addLinks(s, Linkify.WEB_URLS);
+					message.setText(s);
+					message.setMovementMethod(LinkMovementMethod.getInstance());
+					alertDialog.setTitle("Sint Wind PI");
+					alertDialog.setPositiveButton("OK",null);
+					//alertDialog.setView(message);
+					alertDialog.setMessage("Version : " + version + "\nTonino Tarsi 2015\nwww.VoloLiberoMonteCucco.it");
+					alertDialog.show();
+				} catch (NameNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return true;
 		           		     
 		            
 	    }
@@ -626,12 +656,13 @@ public class MainActivity extends Activity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		
 		super.onActivityResult(requestCode, resultCode, data);
-		
+		//Toast.makeText(getApplicationContext(),"pappa" ,Toast.LENGTH_LONG).show();
 	    // Check which request we're responding to
 		//GetApplicationSettings();
 	    if (requestCode == LAUNCH_SETTINGS) {
 	        // Make sure the request was successful
 	        if (resultCode == 0) {
+                //Toast.makeText(getApplicationContext(),"pippo" ,Toast.LENGTH_LONG).show();
 
 	        }
 	    }

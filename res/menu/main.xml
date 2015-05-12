@@ -11,6 +11,7 @@
 <!--     <item android:id="@+id/ViewLCD" android:title="@string/ViewLCD"></item> -->
     <item android:id="@+id/ViewWebcal" android:title="@string/ViewWebcam" android:icon="@drawable/ic_menu_webcam"></item>
     <item android:id="@+id/Tel" android:title="@string/Tel" android:icon="@drawable/ic_menu_tel"></item>
+    <item android:id="@+id/item1" android:title="@string/About"></item>
     
     
 </menu>

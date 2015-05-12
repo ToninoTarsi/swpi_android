@@ -14,5 +14,6 @@
     <string name="title_activity_web_cam">Sint Wind PI</string>
     <string name="ViewWebcam">Webcam</string>
     <string name="Tel">Tel</string>
+    <string name="About">About</string>
 
 </resources>
