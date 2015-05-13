@@ -20,9 +20,6 @@ import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParserException;
 
 
-
-
-
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
