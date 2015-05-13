@@ -71,6 +71,10 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
+	
+	public static final String CLOSE_ACTION = "com.swpi.sintwindpi.close";
+
+	
 	private static final int LAUNCH_SETTINGS = 1;
 	
 	private Station station = new Station();
@@ -95,23 +99,19 @@ public class MainActivity extends Activity {
 			
         	strjson = extras.getString("METEO");
         	myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-        	Log.d(TAG,"myServiceReceiver");
-        	
-        	
-//			SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//			boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-//			int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
-//			
-//			if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
-//				try {
-//					playaudio(strjson);
-//				} catch (JSONException e) {
-//					// TODO Auto-generated catch block
-//					e.printStackTrace();
-//				}
-//			}
-//			n++;
+        	Log.d("MeteoService","Activity received");
+        				
 			
+        }
+	};
+	
+	private BroadcastReceiver myCloseServiceReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+        	//Toast.makeText(getApplicationContext(),"pappa" ,Toast.LENGTH_LONG).show();
+        	//Log.d("MeteoService","myCloseServiceReceiver");
+        	finish();
+        				
 			
         }
 	};
@@ -204,30 +204,27 @@ public class MainActivity extends Activity {
 		
 
 		
-		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);	
+//		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);	
 //    	audioManager.setSpeakerphoneOn(true);
 //		int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
 //    	int sb2value = audioManager.getStreamMaxVolume(audioManager.STREAM_MUSIC);
 //    	audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, sb2value,0);
     	
 
-		boolean bNet = haveNetworkConnection() ;
-		if ( ! bNet) {
-			AlertDialog.Builder builder=new AlertDialog.Builder(this);
-			builder.setTitle("Errore");
-			builder.setMessage("Sint Wind PI ha bisogno di una connessione attiva per funzionare");
-			builder.setCancelable(true);
-			builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		               // User cancelled the dialog
-		           }
-		       });
-
-			builder.create();
-			builder.show();
-
-			
-		}
+//		boolean bNet = haveNetworkConnection() ;
+//		if ( ! bNet) {
+//			AlertDialog.Builder builder=new AlertDialog.Builder(this);
+//			builder.setTitle("Errore");
+//			builder.setMessage("Sint Wind PI ha bisogno di una connessione attiva per funzionare");
+//			builder.setCancelable(true);
+//			builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
+//		           public void onClick(DialogInterface dialog, int id) {
+//		               // User cancelled the dialog
+//		           }
+//		       });
+//			builder.create();
+//			builder.show();
+//		}
 		
 		settings  = getSharedPreferences("swpi_stations", 0);
 		station.ID = settings.getInt("ID", 0);
@@ -294,7 +291,8 @@ public class MainActivity extends Activity {
 	            public void onProgressChanged(WebView view, int progress)
 	            {
 
-	                if(progress == 100 && ( page == 0  || page == 2 )){
+	                if(progress == 100 && ( page == 0  || page == 2 ))
+	                {
 	                	new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
 	                	myWebView.refreshDrawableState();
 	                }
@@ -313,79 +311,85 @@ public class MainActivity extends Activity {
 			// potentially add data to the intent
 			iMeteoService.putExtra("METEO_FILE", station.URL+"/meteo.txt");
 	        registerReceiver(myServiceReceiver, new IntentFilter("com.swpi.sintwindpi.INTENT_ACTION_METEOCHANGED"));
+	        
+	        registerReceiver(myCloseServiceReceiver, new IntentFilter(CLOSE_ACTION));
+
+	        
+	        
+	        
 			startService(iMeteoService); 
 
 			
-			Thread thread = new Thread() {
-			    @Override
-			    public void run() {
-			        try {
-			        	int n = 0;
-			        	String prevstrjson = "";
-			        	TTLib t = new TTLib();
-			        	boolean bSync = false;
-			        	
-			        	try { 
-			        		String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt");
-		            		prevstrjson = tmljson;
-		            		JSONObject jObject = new JSONObject(tmljson);
-		            		myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-			        	} catch(Exception e) {
-		            		
-		            	}	
-			        	while ( ! bSync ) {
-			            	try { 
-			            		String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt");
-			            		if ( !  prevstrjson.equals(tmljson) ) {
-				            		Log.d(TAG, "Sincronized");
-			            			strjson = tmljson;
-			            			myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-			            			prevstrjson = strjson;
-			            			bSync = true;
-			            		}
-			            		else {
-				            		Log.d(TAG, "Sleeping 2000");
-			            			sleep(2000);
-			            		}
-				        	} catch(Exception e) {
-			            		
-			            	}	
-			        	}
-			        	
-			            while(true) {
-		            		Log.d(TAG, "Sleeping 60");
-			            	sleep(60000);
-			            	String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt" );
-			            	try { 
-			            		JSONObject jObject = new JSONObject(tmljson);
-			            		if (  ! prevstrjson.equals(tmljson )) {
-			            			strjson = tmljson;
-			            			myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-			            			prevstrjson = strjson;
-			            			
-									SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-									boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-									int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
-									
-									if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
-										playaudio(strjson);
-									}
-									n++;
-			            			
-			            		}
-			            		
-			            		
-			            	} catch(Exception e) {
-			            		
-			            	}
-			                
-			            }
-			        } catch (InterruptedException e) {
-			            e.printStackTrace();
-			        }
-			    }
-			};
-			//thread.start();
+//			Thread thread = new Thread() {
+//			    @Override
+//			    public void run() {
+//			        try {
+//			        	int n = 0;
+//			        	String prevstrjson = "";
+//			        	TTLib t = new TTLib();
+//			        	boolean bSync = false;
+//			        	
+//			        	try { 
+//			        		String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt");
+//		            		prevstrjson = tmljson;
+//		            		JSONObject jObject = new JSONObject(tmljson);
+//		            		myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
+//			        	} catch(Exception e) {
+//		            		
+//		            	}	
+//			        	while ( ! bSync ) {
+//			            	try { 
+//			            		String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt");
+//			            		if ( !  prevstrjson.equals(tmljson) ) {
+//				            		Log.d(TAG, "Sincronized");
+//			            			strjson = tmljson;
+//			            			myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
+//			            			prevstrjson = strjson;
+//			            			bSync = true;
+//			            		}
+//			            		else {
+//				            		Log.d(TAG, "Sleeping 2000");
+//			            			sleep(2000);
+//			            		}
+//				        	} catch(Exception e) {
+//			            		
+//			            	}	
+//			        	}
+//			        	
+//			            while(true) {
+//		            		Log.d(TAG, "Sleeping 60");
+//			            	sleep(60000);
+//			            	String tmljson = t.getTxtStringFromUrl(station.URL+"/meteo.txt" );
+//			            	try { 
+//			            		JSONObject jObject = new JSONObject(tmljson);
+//			            		if (  ! prevstrjson.equals(tmljson )) {
+//			            			strjson = tmljson;
+//			            			myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
+//			            			prevstrjson = strjson;
+//			            			
+//									SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+//									boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
+//									int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+//									
+//									if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
+//										playaudio(strjson);
+//									}
+//									n++;
+//			            			
+//			            		}
+//			            		
+//			            		
+//			            	} catch(Exception e) {
+//			            		
+//			            	}
+//			                
+//			            }
+//			        } catch (InterruptedException e) {
+//			            e.printStackTrace();
+//			        }
+//			    }
+//			};
+//			thread.start();
 			
 			
 			
@@ -393,123 +397,123 @@ public class MainActivity extends Activity {
 			
 			
 
-			Thread threadAudio = new Thread() {
-			    @Override
-			    public void run() {
-			    	
-			    	while ( true) {
-			    		
-						SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
-						boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-						int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
-						
-						if ( bAudio ) {
-							
-							boolean sended = false;
-							while ( ! sended ) {
-								if ( strjson != "" ) {
-									try {
-										JSONObject jObject = new JSONObject(strjson);
-										String last_measure_time = jObject.getString("last_measure_time");
-										String pattern = "[dd/MM/yyyy-HH:mm:ss]";
-							            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
-							            Date date_current  = new Date();
-						                Date date_meteo = sdf.parse(last_measure_time);
-						                long dif = date_current.getTime() - date_meteo.getTime();
-						                if ( dif < 180000 ) {
-						                	playaudio(jObject);
-						                	sended = true;
-						                }
-						                else {
-						                	Thread.sleep(60*1000);
-						                }
-									} catch (Exception e) { 
-									    // Oops
-									}
-								}
-							}
-						}
-					
-				    	try {
-							Thread.sleep(Audio_repetition_time*60*1000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-			    }
-			};
-			//threadAudio.start();
+//			Thread threadAudio = new Thread() {
+//			    @Override
+//			    public void run() {
+//			    	
+//			    	while ( true) {
+//			    		
+//						SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(MainActivity.this);
+//						boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
+//						int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
+//						
+//						if ( bAudio ) {
+//							
+//							boolean sended = false;
+//							while ( ! sended ) {
+//								if ( strjson != "" ) {
+//									try {
+//										JSONObject jObject = new JSONObject(strjson);
+//										String last_measure_time = jObject.getString("last_measure_time");
+//										String pattern = "[dd/MM/yyyy-HH:mm:ss]";
+//							            SimpleDateFormat sdf = new SimpleDateFormat(pattern);
+//							            Date date_current  = new Date();
+//						                Date date_meteo = sdf.parse(last_measure_time);
+//						                long dif = date_current.getTime() - date_meteo.getTime();
+//						                if ( dif < 180000 ) {
+//						                	playaudio(jObject);
+//						                	sended = true;
+//						                }
+//						                else {
+//						                	Thread.sleep(60*1000);
+//						                }
+//									} catch (Exception e) { 
+//									    // Oops
+//									}
+//								}
+//							}
+//						}
+//					
+//				    	try {
+//							Thread.sleep(Audio_repetition_time*60*1000);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//			    }
+//			};
+//			threadAudio.start();
 		}
 		
 	}
 
-	private void playaudio(String  jsonString) throws JSONException  {
-		
-		JSONObject jObject = new JSONObject(jsonString);
-		
-		String wind_dir_code  = jObject.getString("wind_dir_code");
-		String wind_ave  = jObject.getString("wind_ave");
-		String wind_gust  = jObject.getString("wind_gust");
-
-		String str;
-		str = "winddirection.mp3";
-		playmp3(str);
-		str = wind_dir_code.toLowerCase()+".mp3";
-		playmp3(str);
-		str = "from.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
-		playmp3(str);
-		str = "to.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
-		playmp3(str);
-
-	}
+//	private void playaudio(String  jsonString) throws JSONException  {
+//		
+//		JSONObject jObject = new JSONObject(jsonString);
+//		
+//		String wind_dir_code  = jObject.getString("wind_dir_code");
+//		String wind_ave  = jObject.getString("wind_ave");
+//		String wind_gust  = jObject.getString("wind_gust");
+//
+//		String str;
+//		str = "winddirection.mp3";
+//		playmp3(str);
+//		str = wind_dir_code.toLowerCase()+".mp3";
+//		playmp3(str);
+//		str = "from.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
+//		playmp3(str);
+//		str = "to.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
+//		playmp3(str);
+//
+//	}
+//	
+//	
+//	private void playaudio(JSONObject jObject) throws JSONException {
+//		
+//		String wind_dir_code  = jObject.getString("wind_dir_code");
+//		String wind_ave  = jObject.getString("wind_ave");
+//		String wind_gust  = jObject.getString("wind_gust");
+//
+//		String str;
+//		str = "winddirection.mp3";
+//		playmp3(str);
+//		str = wind_dir_code.toLowerCase()+".mp3";
+//		playmp3(str);
+//		str = "from.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
+//		playmp3(str);
+//		str = "to.mp3";
+//		playmp3(str);
+//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
+//		playmp3(str);
+//
+//	}
 	
-	
-	private void playaudio(JSONObject jObject) throws JSONException {
-		
-		String wind_dir_code  = jObject.getString("wind_dir_code");
-		String wind_ave  = jObject.getString("wind_ave");
-		String wind_gust  = jObject.getString("wind_gust");
-
-		String str;
-		str = "winddirection.mp3";
-		playmp3(str);
-		str = wind_dir_code.toLowerCase()+".mp3";
-		playmp3(str);
-		str = "from.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
-		playmp3(str);
-		str = "to.mp3";
-		playmp3(str);
-		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
-		playmp3(str);
-
-	}
-	
-	public void playmp3(String strMp3) {
-	    try {
-
-	    	MediaPlayer m = new MediaPlayer();
-	        AssetFileDescriptor descriptor = getAssets().openFd("audio/"+strMp3);
-	        m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
-	        descriptor.close();
-
-	        m.prepare();
-	        m.setVolume(1f, 1f);
-	        m.setLooping(false);
-	        m.start();
-	        while ( m.isPlaying() ) {
-	        	Thread.sleep(10);
-	        }
-	        	
-	    } catch (Exception e) {
-	    }
-	}
+//	public void playmp3(String strMp3) {
+//	    try {
+//
+//	    	MediaPlayer m = new MediaPlayer();
+//	        AssetFileDescriptor descriptor = getAssets().openFd("audio/"+strMp3);
+//	        m.setDataSource(descriptor.getFileDescriptor(), descriptor.getStartOffset(), descriptor.getLength());
+//	        descriptor.close();
+//
+//	        m.prepare();
+//	        m.setVolume(1f, 1f);
+//	        m.setLooping(false);
+//	        m.start();
+//	        while ( m.isPlaying() ) {
+//	        	Thread.sleep(10);
+//	        }
+//	        	
+//	    } catch (Exception e) {
+//	    }
+//	}
 	
 	
 	
@@ -649,12 +653,14 @@ public class MainActivity extends Activity {
     {
         super.onDestroy();
         stopService(iMeteoService);
+        Log.d(TAG, "STOP");
+        
     }
 	
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		
+
 		super.onActivityResult(requestCode, resultCode, data);
 		//Toast.makeText(getApplicationContext(),"pappa" ,Toast.LENGTH_LONG).show();
 	    // Check which request we're responding to
@@ -662,7 +668,6 @@ public class MainActivity extends Activity {
 	    if (requestCode == LAUNCH_SETTINGS) {
 	        // Make sure the request was successful
 	        if (resultCode == 0) {
-                //Toast.makeText(getApplicationContext(),"pippo" ,Toast.LENGTH_LONG).show();
 
 	        }
 	    }
