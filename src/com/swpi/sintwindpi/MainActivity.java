@@ -107,9 +107,8 @@ public class MainActivity extends Activity {
         public void onReceive(Context context, Intent intent) {
         	//Toast.makeText(getApplicationContext(),"pappa" ,Toast.LENGTH_LONG).show();
         	//Log.d("MeteoService","myCloseServiceReceiver");
+        	stopService(iMeteoService);
         	finish();
-        				
-			
         }
 	};
 	
@@ -301,22 +300,21 @@ public class MainActivity extends Activity {
 
 			myWebView.loadUrl(urlPage);
 			
-			
+	        registerReceiver(myServiceReceiver, new IntentFilter("com.swpi.sintwindpi.INTENT_ACTION_METEOCHANGED"));
+	        registerReceiver(myCloseServiceReceiver, new IntentFilter(CLOSE_ACTION));
 			
 			// use this to start and trigger a service
 			iMeteoService= new Intent(this, MeteoService.class);
 			// potentially add data to the intent
 			iMeteoService.putExtra("METEO_FILE", station.URL+"/meteo.txt");
-	        registerReceiver(myServiceReceiver, new IntentFilter("com.swpi.sintwindpi.INTENT_ACTION_METEOCHANGED"));
-	        
-	        registerReceiver(myCloseServiceReceiver, new IntentFilter(CLOSE_ACTION));
-
-	        
-	        
-	        
 			startService(iMeteoService); 
 
-			
+
+
+	        
+	        
+	        
+
 //			Thread thread = new Thread() {
 //			    @Override
 //			    public void run() {

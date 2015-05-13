@@ -253,11 +253,12 @@ public class MeteoService extends Service{
 		Bundle extras = intent.getExtras();
 		meteo_file = (String) extras.get("METEO_FILE");
 		
-		new AsynGetMeteo().execute();
+			
 		Thread thread1 = new Thread() {
 		    @Override
 		    public void run() {
 				while (true) {
+					new AsynGetMeteo().execute();
 					try {
 						Calendar c = Calendar.getInstance(); 
 						int seconds = c.get(Calendar.SECOND);
@@ -273,83 +274,11 @@ public class MeteoService extends Service{
 		};
 		thread1.start();
 		
-//		Thread thread = new Thread() {
-//		    @Override
-//		    public void run() {
-//		    	
-//		        try {
-//		        	int n = 0;
-//		        	String prevstrjson = "";
-//		        	TTLib t = new TTLib();
-//		        	boolean bSync = false;
-//		        	
-//		        	try { 
-//		        		String tmljson = t.getTxtStringFromUrl(meteo_file);
-//	            		prevstrjson = tmljson;
-//	            		JSONObject jObject = new JSONObject(tmljson);
-//	            		SendMeteo(strjson);
-//		        	} catch(Exception e) {
-//	            		
-//	            	}	
-//		        	
-//		        	while ( ! bSync ) {
-//		            	try { 
-//		            		String tmljson = t.getTxtStringFromUrl(meteo_file);
-//		            		if ( !  prevstrjson.equals(tmljson) ) {
-//			            		Log.d(TAG, "Sincronized");
-//		            			strjson = tmljson;
-//		            			SendMeteo(strjson);
-//		            			prevstrjson = strjson;
-//		            			bSync = true;
-//		            		}
-//		            		else {
-//			            		Log.d(TAG, "Sleeping 2000");
-//		            			sleep(2000);
-//		            		}
-//			        	} catch(Exception e) {
-//		            		
-//		            	}	
-//		        	}
-//		        	
-//		            while(true) {
-//	            		Log.d(TAG, "Sleeping 60");
-//		            	sleep(60000);
-//		            	String tmljson = t.getTxtStringFromUrl(meteo_file );
-//		            	try { 
-//		            		JSONObject jObject = new JSONObject(tmljson);
-//		            		if (  ! prevstrjson.equals(tmljson )) {
-//		            			strjson = tmljson;
-//		            			SendMeteo(strjson);
-//		            			prevstrjson = strjson;
-//		            			
-//								SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-//								boolean bAudio = sharedPrefs.getBoolean("bAudio", false);
-//								int Audio_repetition_time = Integer.valueOf(sharedPrefs.getString("Audio_repetition_time","5"));
-//								
-//								if ( bAudio &&  ( n % Audio_repetition_time == 0 )  ) {
-//									playaudio(strjson);
-//								}
-//								n++;
-//		            			
-//		            		}
-//		            		
-//		            		
-//		            	} catch(Exception e) {
-//		            		
-//		            	}
-//		                
-//		            }
-//		        } catch (InterruptedException e) {
-//		            e.printStackTrace();
-//		        }
-//		    }
-//		};
-//		thread.start();
-		
+
 		
  
 		
-		return Service.START_STICKY;
+		return Service.START_STICKY;   // tells the OS to recreate the service after it has enough memory and call onStartCommand() again
 		//return Service.START_NOT_STICKY;
 		
 	}
