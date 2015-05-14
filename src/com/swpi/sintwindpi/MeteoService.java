@@ -19,38 +19,30 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetFileDescriptor;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.net.ParseException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 public class MeteoService extends Service{
 
-	private static final int NOTIFICATION = 1;
+	private static final int NOTIFICATION = 1336;
 	public static final String CLOSE_ACTION = "com.swpi.sintwindpi.close";
 	
 	private NotificationManager mNotificationManager;
-    private static final int NOTIFICATION_ID = 2;
     private final NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this);
     
+    boolean bRunning = true;
 	private long lastAudioTime = 0;
 	private String strjson;
 	private static final String TAG = "MeteoService";
@@ -64,10 +56,14 @@ public class MeteoService extends Service{
 		
 		private int n = 0;
 		protected String doInBackground(String... urls) {
+			Log.d("MeteoService","Start AsynGetMeteo");
 			String ret;
 			try {
 	        	TTLib t = new TTLib();
-	        	String tmljson = t.getTxtStringFromUrl(meteo_file);
+	        	//String tmljson = t.getTxtStringFromUrl(meteo_file);
+	        	String tmljson = t.getXMLStringFromUrl(meteo_file);
+	        	
+	        	Log.d("MeteoService",tmljson);
 				ret = tmljson;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -144,17 +140,7 @@ public class MeteoService extends Service{
 	    		}
 				
 
-//				long audioTime = System.currentTimeMillis();
-//				if ( bAudio &&  ( audioTime -  lastAudioTime >  Audio_repetition_time*1000 )  ) {
-//					lastAudioTime = audioTime;
-//					try {
-//						playaudio(strjson);
-//					} catch (JSONException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//				n++;
-//				
+
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -176,9 +162,7 @@ public class MeteoService extends Service{
 	public void onDestroy()
 	{
         Log.d("MainActivity", "ssSTOP");
-
-
-        
+        bRunning = false;
         mNotificationManager.cancelAll();
 
 	}
@@ -187,12 +171,16 @@ public class MeteoService extends Service{
 	@Override
 	public void onCreate() 
 	{			
+		super.onCreate();
+		
 		//Log.d(TAG,"onCreate");
-    	setupNotifications();
-    	showNotification();
+//    	setupNotifications();
+//    	showNotification();
 	}
 
 	private void setupNotifications() { //called in onCreate()
+		
+		
 	    if (mNotificationManager == null) {
 	        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 	    }
@@ -200,12 +188,7 @@ public class MeteoService extends Service{
 	            new Intent(this, MainActivity.class)
 	                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP), 0);
 	    
-//	    Intent intent = new Intent("action_close_app");
-//	    PendingIntent pendingCloseIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//	    
-//	    PendingIntent pendingCloseIntent=PendingIntent.getActivity(this, 0, intent,	0);
-	    
-	    
+
 	    
 	    PendingIntent pendingCloseIntent = PendingIntent.getActivity(this, 0,
 	            new Intent(this, MainActivity.class)
@@ -213,13 +196,12 @@ public class MeteoService extends Service{
 	                    .setAction(CLOSE_ACTION),  0);
 	      
 
-	    
-	    
 	    mNotificationBuilder
 	            .setSmallIcon(R.drawable.ic_launcher)
 //	            .setCategory(NotificationCompat.CATEGORY_SERVICE)
 //	            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
 	            .setContentTitle(getText(R.string.app_name))
+	            .setContentText("Running..")
 //	            .setWhen(System.currentTimeMillis())
 	            .setContentIntent(pendingIntent)
 //	            .setAutoCancel(true)
@@ -238,27 +220,33 @@ public class MeteoService extends Service{
 	    
 	}
 
-	private void showNotification() {
-	    mNotificationBuilder
-	            .setTicker(getText(R.string.app_name))
-	            .setContentText("Running..");
-	    if (mNotificationManager != null) {
-	        mNotificationManager.notify(NOTIFICATION, mNotificationBuilder.build());
-	    }
-	}
+//	private void showNotification() {
+//	    mNotificationBuilder
+//	            .setTicker(getText(R.string.app_name))
+//	            .setContentText("Running..");
+//	    if (mNotificationManager != null) {
+//	        mNotificationManager.notify(NOTIFICATION, mNotificationBuilder.build());
+//	    }
+//	}
+	
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
+    	setupNotifications();
+    	//showNotification();
+    	startForeground(NOTIFICATION, mNotificationBuilder.build());
+
+
 		Bundle extras = intent.getExtras();
 		meteo_file = (String) extras.get("METEO_FILE");
-		
+    	
 			
 		Thread thread1 = new Thread() {
 		    @Override
 		    public void run() {
-				while (true) {
-					new AsynGetMeteo().execute();
+				new AsynGetMeteo().execute();
+				while (bRunning) {
 					try {
 						Calendar c = Calendar.getInstance(); 
 						int seconds = c.get(Calendar.SECOND);
@@ -267,14 +255,13 @@ public class MeteoService extends Service{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-		        	Log.d("MeteoService","Start AsynGetMeteo");
 					new AsynGetMeteo().execute();
 				}
 		    }
 		};
 		thread1.start();
 		
-
+		
 		
  
 		
@@ -312,27 +299,7 @@ public class MeteoService extends Service{
 	}
 	
 	
-//	private void playaudio(JSONObject jObject) throws JSONException {
-//		
-//		String wind_dir_code  = jObject.getString("wind_dir_code");
-//		String wind_ave  = jObject.getString("wind_ave");
-//		String wind_gust  = jObject.getString("wind_gust");
-//
-//		String str;
-//		str = "winddirection.mp3";
-//		playmp3(str);
-//		str = wind_dir_code.toLowerCase()+".mp3";
-//		playmp3(str);
-//		str = "from.mp3";
-//		playmp3(str);
-//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_ave)));
-//		playmp3(str);
-//		str = "to.mp3";
-//		playmp3(str);
-//		str = String.format("n%d.mp3",Math.round(Double.parseDouble(wind_gust)));
-//		playmp3(str);
-//
-//	}
+
 	
 	public void playmp3(String strMp3) {
 	    try {

@@ -14,6 +14,9 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
 import android.content.Context;
@@ -60,12 +63,19 @@ public class TTLib {
 
         try 
         {
-    		HttpClient httpClient = new DefaultHttpClient();
-    		// Creating HTTP Post
-    		//HttpPost httpPost = new HttpPost(url);
-    		HttpGet httpPost = new HttpGet(url);
     		
-			HttpResponse response = httpClient.execute(httpPost);
+    		HttpGet httpGet = new HttpGet(url);
+    		HttpParams httpParameters = new BasicHttpParams();
+    		
+    		int timeoutConnection = 5000;
+    		HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
+    		int timeoutSocket = 8000;
+    		HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
+    		
+    		HttpClient httpClient = new DefaultHttpClient(httpParameters);
+    		
+			HttpResponse response = httpClient.execute(httpGet);
+			
 			HttpEntity httpEntity = response.getEntity();
             xml = EntityUtils.toString(httpEntity);
                
