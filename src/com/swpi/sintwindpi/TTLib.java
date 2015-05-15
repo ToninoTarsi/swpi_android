@@ -58,12 +58,12 @@ public class TTLib {
 	}
 
 	
-	public String getXMLStringFromUrl(String url) {
+	public String getXMLStringFromUrl(String url) throws ClientProtocolException, IOException {
         String xml = null;
 
-        try 
-        {
-    		
+//        try 
+//        {
+//    		
     		HttpGet httpGet = new HttpGet(url);
     		HttpParams httpParameters = new BasicHttpParams();
     		
@@ -81,17 +81,17 @@ public class TTLib {
                
     		// writing response to log
             Log.d("Http Response:", xml);
-    	} 
-		catch (ClientProtocolException e) 
-		{
-			// writing exception to log
-			e.printStackTrace();
-		} 
-        catch (IOException e) 
-        	{
-    			// writing exception to log
-    			e.printStackTrace();
-    		}
+//    	} 
+//		catch (ClientProtocolException e) 
+//		{
+//			// writing exception to log
+//			e.printStackTrace();
+//		} 
+//        catch (IOException e) 
+//    	{
+//			// writing exception to log
+//			e.printStackTrace();
+//		}
         
     	return xml;
 	}

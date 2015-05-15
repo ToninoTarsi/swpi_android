@@ -52,8 +52,7 @@ public class MeteoService extends Service{
 	private class AsynGetMeteo extends AsyncTask<String, Void, String> {
 		public  AsynGetMeteo() {
 		}
-		
-		
+		 
 		private int n = 0;
 		protected String doInBackground(String... urls) {
 			Log.d("MeteoService","Start AsynGetMeteo");
@@ -255,6 +254,7 @@ public class MeteoService extends Service{
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					//playmp3("beep.mp3");
 					new AsynGetMeteo().execute();
 				}
 		    }
@@ -302,7 +302,8 @@ public class MeteoService extends Service{
 
 	
 	public void playmp3(String strMp3) {
-	    try {
+	    try 
+	    {
 	    	if ( isPlayingAudio )
 	    		return;
 	    	isPlayingAudio = true;
@@ -324,7 +325,10 @@ public class MeteoService extends Service{
 	        m.release();	
 	        m = null;
 	        isPlayingAudio = false;
-	    } catch (Exception e) {
+	        
+	    } 
+	    catch (Exception e) 
+	    {
 	    	isPlayingAudio = false;
 	    }
 	}
