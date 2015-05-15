@@ -255,7 +255,7 @@ public class MeteoService extends Service{
 						e.printStackTrace();
 					}
 					//playmp3("beep.mp3");
-					new AsynGetMeteo().execute();
+					if (bRunning) new AsynGetMeteo().execute();
 				}
 		    }
 		};

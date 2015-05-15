@@ -198,7 +198,7 @@ public class MainActivity extends Activity {
 		width = metrics.widthPixels;
 		height = metrics.heightPixels;
 		
-
+		//Toast.makeText(getApplicationContext(),Integer.toString(width) ,Toast.LENGTH_LONG).show();
 		
 //		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);	
 //    	audioManager.setSpeakerphoneOn(true);
