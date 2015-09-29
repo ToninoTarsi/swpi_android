@@ -198,29 +198,6 @@ public class MainActivity extends Activity {
 		width = metrics.widthPixels;
 		height = metrics.heightPixels;
 		
-		//Toast.makeText(getApplicationContext(),Integer.toString(width) ,Toast.LENGTH_LONG).show();
-		
-//		audioManager = (AudioManager) getSystemService(AUDIO_SERVICE);	
-//    	audioManager.setSpeakerphoneOn(true);
-//		int currentVolume = audioManager.getStreamVolume(AudioManager.STREAM_RING);
-//    	int sb2value = audioManager.getStreamMaxVolume(audioManager.STREAM_MUSIC);
-//    	audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, sb2value,0);
-    	
-
-//		boolean bNet = haveNetworkConnection() ;
-//		if ( ! bNet) {
-//			AlertDialog.Builder builder=new AlertDialog.Builder(this);
-//			builder.setTitle("Errore");
-//			builder.setMessage("Sint Wind PI ha bisogno di una connessione attiva per funzionare");
-//			builder.setCancelable(true);
-//			builder.setNegativeButton("Chiudi", new DialogInterface.OnClickListener() {
-//		           public void onClick(DialogInterface dialog, int id) {
-//		               // User cancelled the dialog
-//		           }
-//		       });
-//			builder.create();
-//			builder.show();
-//		}
 		
 		settings  = getSharedPreferences("swpi_stations", 0);
 		station.ID = settings.getInt("ID", 0);
@@ -282,8 +259,8 @@ public class MainActivity extends Activity {
 			myWebView = (WebView) findViewById(R.id.webView1);
 			myWebView.getSettings().setJavaScriptEnabled(true);
 
-
-			myWebView.setWebChromeClient(new WebChromeClient() {
+			myWebView.setWebViewClient(new WebViewClient() { 
+			//myWebView.setWebChromeClient(new WebChromeClient() {
 	            public void onProgressChanged(WebView view, int progress)
 	            {
 
