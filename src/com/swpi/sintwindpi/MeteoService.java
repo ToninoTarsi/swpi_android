@@ -48,6 +48,8 @@ public class MeteoService extends Service{
 	private static final String TAG = "MeteoService";
 	String meteo_file;
 	private boolean isPlayingAudio = false;
+	private boolean bUpdated = false;
+
 	
 	private class AsynGetMeteo extends AsyncTask<String, Void, String> {
 		public  AsynGetMeteo() {
@@ -62,7 +64,7 @@ public class MeteoService extends Service{
 	        	//String tmljson = t.getTxtStringFromUrl(meteo_file);
 	        	String tmljson = t.getXMLStringFromUrl(meteo_file);
 	        	
-	        	Log.d("MeteoService",tmljson);
+	        	//Log.d("MeteoService",tmljson);
 				ret = tmljson;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -74,13 +76,14 @@ public class MeteoService extends Service{
 		
 		
 		protected void onPostExecute(String result) {
-    		try {
+    		try 
+    		{
 				JSONObject jObject = new JSONObject(result);
 				strjson = result;
 	    		SendMeteo(strjson);
 	    		
 	    		String last_measure_time = jObject.getString("last_measure_time");
-	    		//Log.d("AUDIO",last_measure_time);
+	    		Log.d("MeteoService", "MeteoService updated " + last_measure_time);
 	    		
 	    		SimpleDateFormat  format = new SimpleDateFormat("[dd/MM/yyyy-HH:mm:ss]");  
 	    		Date theMeteoDate = null;
@@ -94,6 +97,7 @@ public class MeteoService extends Service{
 					return;
 				}
 	    		
+	    		bUpdated = true;
 	    		//Log.d("MeteoService",theMeteoDate.toString());
 	    		
 	    		Date theNowDate = new Date();
@@ -232,6 +236,8 @@ public class MeteoService extends Service{
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		
+		bUpdated = false;
+		
     	setupNotifications();
     	//showNotification();
     	startForeground(NOTIFICATION, mNotificationBuilder.build());
@@ -244,7 +250,22 @@ public class MeteoService extends Service{
 		Thread thread1 = new Thread() {
 		    @Override
 		    public void run() {
-				new AsynGetMeteo().execute();
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+		    	while ( ! bUpdated )
+		    	{
+		    		new AsynGetMeteo().execute();
+		    		try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+		    	}
 				while (bRunning) {
 					try {
 						Calendar c = Calendar.getInstance(); 

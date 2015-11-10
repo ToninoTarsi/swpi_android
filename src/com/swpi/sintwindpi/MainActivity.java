@@ -68,10 +68,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
-	
 	public static final String CLOSE_ACTION = "com.swpi.sintwindpi.close";
 
-	
 	private static final int LAUNCH_SETTINGS = 1;
 	
 	private Station station = new Station();
@@ -87,6 +85,7 @@ public class MainActivity extends Activity {
 	private AudioManager audioManager;
 	private Intent iMeteoService;
 	private int n = 0;
+	private boolean bUpdated = false;
 	
 	private BroadcastReceiver myServiceReceiver = new BroadcastReceiver() {
         @Override
@@ -148,6 +147,7 @@ public class MainActivity extends Activity {
 
 		protected String doInBackground(String... urls) {
 		    URL textUrl;
+		    Log.d("UPDATE", "UpdateMeteoTask update " + urls[0]);
 		    try {
 			     textUrl = new URL(urls[0]);
 			     BufferedReader bufferReader = new BufferedReader(new InputStreamReader(textUrl.openStream()));
@@ -170,6 +170,8 @@ public class MainActivity extends Activity {
 		}
 		     
 	  protected void onPostExecute(String result) {
+		  Log.d("UPDATE", "UpdateMeteoTask updated " + result);
+		  bUpdated = true;
 		  UpdateData(result);
 	  }
 	}
@@ -261,16 +263,39 @@ public class MainActivity extends Activity {
 
 			myWebView.setWebViewClient(new WebViewClient() { 
 			//myWebView.setWebChromeClient(new WebChromeClient() {
-	            public void onProgressChanged(WebView view, int progress)
-	            {
-
-	                if(progress == 100 && ( page == 0  || page == 2 ))
-	                {
-	                	new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
-	                	myWebView.refreshDrawableState();
-	                }
-
-	            }
+				
+//				public void onPageFinished(WebView view, String url) {
+//	               	while ( ! bUpdated )
+//	               	{
+//	               		new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
+//	               		try {
+//								Thread.sleep(2000);
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//	               	}	
+//						  
+//				}
+				   
+//	            public void onProgressChanged(WebView view, int progress)
+//	            {
+//	                if(progress == 100 && ( page == 0  || page == 2 ))
+//	                {
+////	                	while ( ! bUpdated )
+////	                	{
+////	                		new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
+////	                		try {
+////								Thread.sleep(2000);
+////							} catch (InterruptedException e) {
+////								// TODO Auto-generated catch block
+////								e.printStackTrace();
+////							}
+////	                	}	
+//	                	myWebView.refreshDrawableState();
+//	                }
+//
+//	            }
 
 	        });
 
