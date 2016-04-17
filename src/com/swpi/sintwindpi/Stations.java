@@ -211,7 +211,7 @@ public class Stations extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_stations);
 		
-		new DownloadXMLTask().execute("http://www.vololiberomontecucco.it/jessica2/swpi_stations.php");
+		new DownloadXMLTask().execute("http://www.vololiberomontecucco.it/jessica2/swpi_stations_new.php");
 		
 
 	}

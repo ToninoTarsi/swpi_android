@@ -33,6 +33,7 @@
 #canvasRadial1{
   position: absolute;
   width: 335px;
+  top: 77px;
   display: block;
   margin:0px auto;
   
@@ -152,9 +153,11 @@ function setWinDirSize(size)
         useColorLabels: false,
         digitalFont: false,
         });	
-    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.STAINLESS);
-    winDirGauge.setFrameDesign(steelseries.FrameDesign.TILTED_BLACK);
+    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.WHITE);
+    winDirGauge.setFrameDesign(steelseries.FrameDesign.SHINY_METAL);
 	winDirGauge.setPointerType(steelseries.PointerType.TYPE3);
+	
+	
 	//winDirGauge.setForegroundType(steelseries.ForegroundType.TYPE3);
 	//winDirGauge.setLcdColor(steelseries.LcdColor.BLUE_BLACK);
 
@@ -345,6 +348,13 @@ function Update(data) {
 	
 	
 function UpdateData(json) {
+	//alert("Update");
+	data = jQuery.parseJSON(json);
+	Update(data);
+}
+
+function updatedata(json) {
+	//alert("apdate");
 	data = jQuery.parseJSON(json);
 	Update(data);
 }
@@ -546,7 +556,7 @@ function getLastMeasureDelay(updatedata)
 <!-- 			<canvas  id="canvasLedGreen4" width="40" height="40"></canvas> -->
 <!-- 			<canvas  id="canvasLedGreen5" width="40" height="40"></canvas> -->
 			
-			<div align="center"> 
+			<div align="center" vertical-align="top"> 
 			
 				<canvas  id="canvasRadial1"  width="280" height="280"></canvas>
 				

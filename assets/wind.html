@@ -34,6 +34,7 @@
 #canvasRadial1{
   position: absolute;
   width: 300px;
+  top: 77px;
   display: block;
   margin:0px auto;
   
@@ -174,8 +175,8 @@ function setWinDirSize(size)
         digitalFont: false,
         });	
 		
-    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.STAINLESS);
-    winDirGauge.setFrameDesign(steelseries.FrameDesign.TILTED_BLACK);
+    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.WHITE);
+    winDirGauge.setFrameDesign(steelseries.FrameDesign.SHINY_METAL);
 	winDirGauge.setPointerType(steelseries.PointerType.TYPE3);
 
 
@@ -365,6 +366,13 @@ function Update(data) {
 	
 	
 function UpdateData(json) {
+	//alert("Update");
+	data = jQuery.parseJSON(json);
+	Update(data);
+}
+
+function updatedata(json) {
+	//alert("update");
 	data = jQuery.parseJSON(json);
 	Update(data);
 }

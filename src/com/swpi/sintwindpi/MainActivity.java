@@ -94,8 +94,14 @@ public class MainActivity extends Activity {
 			//Address location = extras.get("LOCATION");
 			
         	strjson = extras.getString("METEO");
-        	myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
-        	Log.d("MeteoService","Activity received");
+        	strjson = strjson.replace("\"", "\\\"");
+        	
+        	myWebView.loadUrl("javascript:updatedata('"+strjson+"')");
+        	//myWebView.loadUrl("javascript:updatedata('{\"wind_dir\": 247.5, \"wind_dir_code\": WSW, \"hum_out\": null, \"wind_gust\": 6.0}')");
+
+        	Log.d("MeteoService","Meteo data received");
+        	Log.d("MeteoService",strjson);
+
         				
 			
         }
@@ -212,7 +218,7 @@ public class MainActivity extends Activity {
 		else
 		{
 
-			page = settings.getInt("PAGE", 0);
+			page = settings.getInt("PAGE", 2);
 			station.NAME = settings.getString("NAME", "");
 			station.LAT = settings.getFloat("LAT", 0); 
 			station.LON = settings.getFloat("LON", 0); 	
@@ -233,6 +239,7 @@ public class MainActivity extends Activity {
 		    {
 		    	case 0:
 		    		if ( width > 480 )
+			    	//if ( true )
 		    			urlPage = "file:///android_asset/data480.html";
 		    		else
 		    			urlPage = "file:///android_asset/data.html";
@@ -261,7 +268,9 @@ public class MainActivity extends Activity {
 			myWebView = (WebView) findViewById(R.id.webView1);
 			myWebView.getSettings().setJavaScriptEnabled(true);
 
-			myWebView.setWebViewClient(new WebViewClient() { 
+			//myWebView.setWebViewClient(new WebViewClient() { 
+			myWebView.setWebChromeClient(new WebChromeClient() { 
+				
 			//myWebView.setWebChromeClient(new WebChromeClient() {
 				
 //				public void onPageFinished(WebView view, String url) {

@@ -79,7 +79,7 @@ public class MeteoService extends Service{
     		try 
     		{
 				JSONObject jObject = new JSONObject(result);
-				strjson = result;
+				strjson = result.split("\n")[0];
 	    		SendMeteo(strjson);
 	    		
 	    		String last_measure_time = jObject.getString("last_measure_time");
