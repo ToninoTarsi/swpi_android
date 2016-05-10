@@ -50,6 +50,7 @@ public final class R {
         public static final int imageView1=0x7f0a0002;
         public static final int imageViewCheckBox=0x7f0a0005;
         public static final int item1=0x7f0a000d;
+        public static final int item2=0x7f0a000e;
         public static final int listView1=0x7f0a0001;
         public static final int settings=0x7f0a000b;
         public static final int webView1=0x7f0a0000;
@@ -77,32 +78,33 @@ public final class R {
         public static final int ViewLCD=0x7f060009;
         public static final int ViewWeb=0x7f060006;
         public static final int ViewWebcam=0x7f06000b;
+        public static final int ViewWindWebcam=0x7f06000e;
         public static final int action_settings=0x7f060001;
         public static final int app_name=0x7f060000;
         public static final int hello_world=0x7f060002;
-        public static final int pref_default_display_name=0x7f060013;
-        public static final int pref_description_social_recommendations=0x7f060011;
+        public static final int pref_default_display_name=0x7f060014;
+        public static final int pref_description_social_recommendations=0x7f060012;
         /**  Example settings for Data & Sync 
          */
-        public static final int pref_header_data_sync=0x7f060015;
+        public static final int pref_header_data_sync=0x7f060016;
         /**  Strings related to Settings 
  Example General settings 
          */
-        public static final int pref_header_general=0x7f06000f;
+        public static final int pref_header_general=0x7f060010;
         /**  Example settings for Notifications 
          */
-        public static final int pref_header_notifications=0x7f060018;
-        public static final int pref_ringtone_silent=0x7f06001b;
-        public static final int pref_title_add_friends_to_messages=0x7f060014;
-        public static final int pref_title_display_name=0x7f060012;
-        public static final int pref_title_new_message_notifications=0x7f060019;
-        public static final int pref_title_ringtone=0x7f06001a;
-        public static final int pref_title_social_recommendations=0x7f060010;
-        public static final int pref_title_sync_frequency=0x7f060016;
-        public static final int pref_title_system_sync_settings=0x7f060017;
-        public static final int pref_title_vibrate=0x7f06001c;
+        public static final int pref_header_notifications=0x7f060019;
+        public static final int pref_ringtone_silent=0x7f06001c;
+        public static final int pref_title_add_friends_to_messages=0x7f060015;
+        public static final int pref_title_display_name=0x7f060013;
+        public static final int pref_title_new_message_notifications=0x7f06001a;
+        public static final int pref_title_ringtone=0x7f06001b;
+        public static final int pref_title_social_recommendations=0x7f060011;
+        public static final int pref_title_sync_frequency=0x7f060017;
+        public static final int pref_title_system_sync_settings=0x7f060018;
+        public static final int pref_title_vibrate=0x7f06001d;
         public static final int title_activity_gauge1=0x7f060008;
-        public static final int title_activity_settings=0x7f06000e;
+        public static final int title_activity_settings=0x7f06000f;
         public static final int title_activity_stations=0x7f060003;
         public static final int title_activity_web=0x7f060004;
         public static final int title_activity_web_cam=0x7f06000a;

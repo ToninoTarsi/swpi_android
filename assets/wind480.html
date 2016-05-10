@@ -32,7 +32,7 @@
  
 #canvasRadial1{
   position: absolute;
-  width: 335px;
+  width: 345px;
   top: 77px;
   display: block;
   margin:0px auto;
@@ -53,33 +53,65 @@
 }  
 #canvasLedRed {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:70px;;
 }
 #canvasLedRed1 {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:50px;;
 }
 #canvasLedRed2 {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:30px;;
 }
 #canvasLedRed3 {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:10px;;
 }
 #canvasLedRed4 {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:90px;;
 }
 #canvasLedRed5 {
   position: absolute;
-  top: 65px;
+  top: 75px;;
   right:110px;;
+}
+
+
+#canvasLedGreen {
+  position: absolute;
+  top: 75px;;
+  left:70px;;
+}
+#canvasLedGreen1 {
+  position: absolute;
+  top: 75px;;
+  left:50px;;
+}
+#canvasLedGreen2 {
+  position: absolute;
+  top: 75px;;
+  left:30px;;
+}
+#canvasLedGreen3 {
+  position: absolute;
+  top: 75px;;
+  left:10px;;
+}
+#canvasLedGreen4 {
+  position: absolute;
+  top: 75px;;
+  left:90px;;
+}
+#canvasLedGreen5 {
+  position: absolute;
+  top: 75px;;
+  left:110px;;
 }
 
 
@@ -248,7 +280,7 @@ function init() {
 function UpdateTime()
 {
 	//alert("pp");	
-	if ( data.last_measure_time != null ) {
+	if ( data != null &&  data.last_measure_time != null ) {
 		
 		var dif = getLastMeasureDelay(data.last_measure_time);
 		
@@ -347,11 +379,11 @@ function Update(data) {
 }
 	
 	
-function UpdateData(json) {
-	//alert("Update");
-	data = jQuery.parseJSON(json);
-	Update(data);
-}
+// function UpdateData(json) {
+// 	//alert("Update");
+// 	data = jQuery.parseJSON(json);
+// 	Update(data);
+// }
 
 function updatedata(json) {
 	//alert("apdate");

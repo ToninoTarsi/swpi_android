@@ -99,6 +99,7 @@ public class MainActivity extends Activity {
         	myWebView.loadUrl("javascript:updatedata('"+strjson+"')");
         	//myWebView.loadUrl("javascript:updatedata('{\"wind_dir\": 247.5, \"wind_dir_code\": WSW, \"hum_out\": null, \"wind_gust\": 6.0}')");
 
+
         	Log.d("MeteoService","Meteo data received");
         	Log.d("MeteoService",strjson);
 
@@ -187,7 +188,8 @@ public class MainActivity extends Activity {
 	public void UpdateData(String strjson)
 	{
     	if ( strjson.startsWith("{") && strjson.endsWith("}")) {
-    		myWebView.loadUrl("javascript:UpdateData('"+strjson+"')");
+        	myWebView.loadUrl("javascript:updatedata('"+strjson+"')");
+
     		//Log.d(TAG, "data updated " + strjson);
     	}
     	else {
@@ -218,7 +220,7 @@ public class MainActivity extends Activity {
 		else
 		{
 
-			page = settings.getInt("PAGE", 2);
+			page = settings.getInt("PAGE", 5);
 			station.NAME = settings.getString("NAME", "");
 			station.LAT = settings.getFloat("LAT", 0); 
 			station.LON = settings.getFloat("LON", 0); 	
@@ -235,6 +237,7 @@ public class MainActivity extends Activity {
 //		    PAGE 2 = Wind
 //		    PAGE 3 = LCD
 //		    PAGE 4 = WEBCAM 
+//			PAGE 5 = WINDWEBCAM
 		    switch(page)
 		    {
 		    	case 0:
@@ -253,6 +256,13 @@ public class MainActivity extends Activity {
 			    	else
 			    		urlPage = "file:///android_asset/wind.html";
 			    	break;
+			    case 5:
+			    	if (station.WEBCAM.equals("") )
+			    		urlPage = "file:///android_asset/wind480.html";
+			    	else
+			    		urlPage = "file:///android_asset/windwebcam.html";
+			    	break;
+			    	
 //			    case 3:
 //			    	urlPage = "file:///android_asset/lcd.html";
 //			    	break;
@@ -268,6 +278,9 @@ public class MainActivity extends Activity {
 			myWebView = (WebView) findViewById(R.id.webView1);
 			myWebView.getSettings().setJavaScriptEnabled(true);
 
+			myWebView.getSettings().setAppCacheEnabled(false);
+			myWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
+	        
 			//myWebView.setWebViewClient(new WebViewClient() { 
 			myWebView.setWebChromeClient(new WebChromeClient() { 
 				
@@ -287,24 +300,14 @@ public class MainActivity extends Activity {
 //						  
 //				}
 				   
-//	            public void onProgressChanged(WebView view, int progress)
-//	            {
-//	                if(progress == 100 && ( page == 0  || page == 2 ))
-//	                {
-////	                	while ( ! bUpdated )
-////	                	{
-////	                		new UpdateMeteoTask().execute(station.URL+"/meteo.txt" );
-////	                		try {
-////								Thread.sleep(2000);
-////							} catch (InterruptedException e) {
-////								// TODO Auto-generated catch block
-////								e.printStackTrace();
-////							}
-////	                	}	
-//	                	myWebView.refreshDrawableState();
-//	                }
-//
-//	            }
+	            public void onProgressChanged(WebView view, int progress)
+	            {
+	                if(progress == 100 && ( page == 5  ) )
+	                {
+	    	        	myWebView.loadUrl("javascript:updatecamera('"+station.WEBCAM+"')");
+	                }
+
+	            }
 
 	        });
 
@@ -334,6 +337,7 @@ public class MainActivity extends Activity {
 //    PAGE 2 = Wind
 //    PAGE 3 = LCD
 //    PAGE 4 = WEBCAM
+//	  PAGE 5 = WINDWEBCAM
 	@Override
 	public boolean onPrepareOptionsMenu (Menu menu) {
 		int page = settings.getInt("PAGE", 0);
@@ -341,14 +345,21 @@ public class MainActivity extends Activity {
 	        menu.findItem(R.id.ViewMain).setEnabled(false);
 	    else
 	    	 menu.findItem(R.id.ViewMain).setEnabled(true);
-	    if (page == 2 )
+	    if ( page == 2  )
 	        menu.findItem(R.id.ViewGauge1).setEnabled(false);	
 	    else
 	    	 menu.findItem(R.id.ViewGauge1).setEnabled(true);	
-	    if (station.WEBCAM == "" )
-	        menu.findItem(R.id.ViewWebcal).setEnabled(false);	
+	    if ( page == 5 )
+	        menu.findItem(R.id.item2).setEnabled(false);	
 	    else
-	    	menu.findItem(R.id.ViewWebcal).setEnabled(true);
+	    	 menu.findItem(R.id.item2).setEnabled(true);		    
+	    
+	    
+	    if (station.WEBCAM.equals("") )
+	    {
+	        menu.findItem(R.id.ViewWebcal).setEnabled(false);	
+	    	menu.findItem(R.id.item2).setEnabled(false);
+	    }
 	    if (station.TEL == "" )
 	        menu.findItem(R.id.Tel).setEnabled(false);	
 	    else
@@ -400,7 +411,15 @@ public class MainActivity extends Activity {
 		    	else
 		    		urlPage = "file:///android_asset/wind.html";
 		    	myWebView.loadUrl(urlPage);
-		        return true;    
+		        return true;  
+		    case R.id.item2: 
+		    	page = 5;
+		    	settings.edit().putInt("PAGE", 5).commit();  
+		    	urlPage = "file:///android_asset/windwebcam.html";
+		    	myWebView.loadUrl(urlPage);
+		        return true;  		        
+		        
+		        
 		    case R.id.ViewMain:
 		    	page = 0;
 		    	settings.edit().putInt("PAGE", 0).commit();           	 

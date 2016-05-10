@@ -40,7 +40,7 @@ function UpdateTime()
 	
 	//alert("pp");
 	
-	if ( data.last_measure_time != null ) {
+	if ( data != null &&  data.last_measure_time != null ) {
 		
 		var dif = getLastMeasureDelay(data.last_measure_time);
 		
@@ -72,17 +72,23 @@ function getParameterByName(name) {
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
 	
-function UpdateData(json){
+// function UpdateData(json){
 
-	//alert("main");
+// 	//alert("main");
 
-	data = jQuery.parseJSON(json);
-	Update(data)
+// 	data = jQuery.parseJSON(json);
+// 	Update(data)
 
-	//alert("Updated");
+// 	//alert("Updated");
  
-}	
+// }	
 	
+function updatedata(json) {
+	//alert(json);
+	data = jQuery.parseJSON(json);
+	Update(data);
+}
+
 function init() {
 	
 
