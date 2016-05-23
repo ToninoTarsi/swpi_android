@@ -329,8 +329,6 @@ public class MainActivity extends Activity {
 		
 	}
 
-
-	
 	
 //    PAGE 0 - Dati
 //    PAGE 1 - WEB
@@ -355,12 +353,12 @@ public class MainActivity extends Activity {
 	    	 menu.findItem(R.id.item2).setEnabled(true);		    
 	    
 	    
-	    if (station.WEBCAM.equals("") )
+	    if (station.WEBCAM == null || station.WEBCAM.equals("") )
 	    {
 	        menu.findItem(R.id.ViewWebcal).setEnabled(false);	
 	    	menu.findItem(R.id.item2).setEnabled(false);
 	    }
-	    if (station.TEL == "" )
+	    if (station.TEL == null ||   station.TEL.equals(""))
 	        menu.findItem(R.id.Tel).setEnabled(false);	
 	    else
 	    	menu.findItem(R.id.Tel).setEnabled(true);
