@@ -145,7 +145,12 @@ public class WebCamActivity extends Activity {
 		    	settings.edit().putInt("PAGE", 0).commit();           	 
 		        Intent intMain = new Intent(this,MainActivity.class);
 		        startActivity(intMain);
-		        return true;      
+		        return true; 
+		    case R.id.item2: 
+		    	settings.edit().putInt("PAGE", 5).commit();  
+		        Intent intMain1 = new Intent(this,MainActivity.class);
+		        startActivity(intMain1);
+		        return true;  		    
 		    case R.id.Tel:
 		    	Intent callIntent = new Intent(Intent.ACTION_CALL);
 		    	String ntel = "tel:" + station.TEL;

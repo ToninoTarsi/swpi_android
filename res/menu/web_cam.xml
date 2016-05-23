@@ -10,6 +10,7 @@
     <item android:id="@+id/ViewMain" android:title="@string/ViewData" android:icon="@drawable/ic_menu_data"></item>
 <!--     <item android:id="@+id/ViewLCD" android:title="@string/ViewLCD"></item> -->
         <item android:id="@+id/Tel" android:title="@string/Tel" android:icon="@drawable/ic_menu_tel"></item>
-    
+        <item android:id="@+id/item2" android:title="@string/ViewWindWebcam"></item>
+        
 
 </menu>
