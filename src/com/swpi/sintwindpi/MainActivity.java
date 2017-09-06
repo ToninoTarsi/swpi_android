@@ -251,14 +251,14 @@ public class MainActivity extends Activity {
 			    	urlPage = station.URL +"/swpi_smartphone.html";
 			        break;
 			    case 2:
-			    	if ( width > 480 )
-			    		urlPage = "file:///android_asset/wind480.html";
-			    	else
+//			    	if ( width > 480 )
+//			    		urlPage = "file:///android_asset/wind480.html";
+//			    	else
 			    		urlPage = "file:///android_asset/wind.html";
 			    	break;
 			    case 5:
 			    	if (station.WEBCAM.equals("") )
-			    		urlPage = "file:///android_asset/wind480.html";
+			    		urlPage = "file:///android_asset/wind.html";
 			    	else
 			    		urlPage = "file:///android_asset/windwebcam.html";
 			    	break;
@@ -404,9 +404,9 @@ public class MainActivity extends Activity {
 		    case R.id.ViewGauge1: 
 		    	page = 2;
 		    	settings.edit().putInt("PAGE", 2).commit();  
-		    	if ( width > 480 )
-		    		urlPage = "file:///android_asset/wind480.html";
-		    	else
+//		    	if ( width > 480 )
+//		    		urlPage = "file:///android_asset/wind480.html";
+//		    	else
 		    		urlPage = "file:///android_asset/wind.html";
 		    	myWebView.loadUrl(urlPage);
 		        return true;  

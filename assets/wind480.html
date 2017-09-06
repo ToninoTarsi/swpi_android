@@ -185,8 +185,9 @@ function setWinDirSize(size)
         useColorLabels: false,
         digitalFont: false,
         });	
-    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.WHITE);
-    winDirGauge.setFrameDesign(steelseries.FrameDesign.SHINY_METAL);
+
+    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.BEIGE);
+    winDirGauge.setFrameDesign(steelseries.FrameDesign.STEEL);
 	winDirGauge.setPointerType(steelseries.PointerType.TYPE3);
 	
 	
@@ -565,7 +566,7 @@ function getLastMeasureDelay(updatedata)
 	 
 		<div data-role="content">
 		
-			<ul data-role="listview" data-inset="true" data-divider-theme="b">
+			<ul data-role="listview" data-inset="true" data-divider-theme="d">
 				<li data-role="list-divider"> <span style="font-size:100%"> 
 				   <label  id="last_measure_time">time</label></span> 
 				   <canvas  id="canvasLedUpdate" width="40" height="40"></canvas>
@@ -595,11 +596,11 @@ function getLastMeasureDelay(updatedata)
 			</div>
 		
 			<div id="grid" class="ui-grid-d">
-				<div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/temperatura.png" width="32" height"32"  ><br><label id="temp_out">temp</label> °C</div></div>
-				<div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/blood-pressure-icon.png" width="32" height"32" > <br> <label id="pressure">pres</label> hPa</div></div>
-				<div class="ui-block-c"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/water-icon.png" width="32" height"32" > <br> <label id="umidity">hum</label>   %</div></div>
-				<div class="ui-block-d"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/Status-weather-many-clouds-icon.png" width="32" height"32" > <br> <label id="cloudbase">cloudbase</label> m</div></div>
-				<div class="ui-block-e"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/rain-icon.png" width="32" height"32" > <br> <label id="rain_rate">rain</label> mm</div></div>
+				<div class="ui-block-a"><div class="ui-bar ui-bar-d" style="height:80px"><img src="image/temperatura.png" width="32" height"32"  ><br><label id="temp_out">temp</label> °C</div></div>
+				<div class="ui-block-b"><div class="ui-bar ui-bar-d" style="height:80px"><img src="image/blood-pressure-icon.png" width="32" height"32" > <br> <label id="pressure">pres</label> hPa</div></div>
+				<div class="ui-block-c"><div class="ui-bar ui-bar-d" style="height:80px"><img src="image/water-icon.png" width="32" height"32" > <br> <label id="umidity">hum</label>   %</div></div>
+				<div class="ui-block-d"><div class="ui-bar ui-bar-d" style="height:80px"><img src="image/Status-weather-many-clouds-icon.png" width="32" height"32" > <br> <label id="cloudbase">cloudbase</label> m</div></div>
+				<div class="ui-block-e"><div class="ui-bar ui-bar-d" style="height:80px"><img src="image/rain-icon.png" width="32" height"32" > <br> <label id="rain_rate">rain</label> mm</div></div>
 
 				</div><!-- /grid-c -->
 		

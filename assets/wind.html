@@ -4,64 +4,61 @@
     <title>Sint Wind PI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta charset="utf-8">
-      <link rel="apple-touch-icon" href="icons/icon_iphone_x1.png" />
-      <link rel="apple-touch-icon" sizes="72x72" href="icons/icon_ipad_x2.png" />
-      <link rel="apple-touch-icon" sizes="114x114" href="icons/icon_iphone_x2.png" />
-      <link rel="apple-touch-icon" sizes="144x144" href="icons/icon_ipad_x2.png" />
-      <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
+	  <link rel="apple-touch-icon" href="icons/icon_iphone_x1.png" />
+	  <link rel="apple-touch-icon" sizes="72x72" href="icons/icon_ipad_x2.png" />
+	  <link rel="apple-touch-icon" sizes="114x114" href="icons/icon_iphone_x2.png" />
+	  <link rel="apple-touch-icon" sizes="144x144" href="icons/icon_ipad_x2.png" />
+	  <link rel="stylesheet" href="js/jquery.mobile-1.3.1.min.css" />
      
-      <script src="js/jquery-1.10.0.min.js"></script>
+	  <script src="js/jquery-1.10.0.min.js"></script>
       <script src="js/jquery.mobile-1.3.1.js"></script>
  
-	
-	<script type="text/javascript" src="js/tween-min.js"></script>
-	<script type="text/javascript" src="js/mysteelseries-min-0.11.14.js"></script>
+	 <script type="text/javascript" src="js/tween-min.js"></script>
+	 <script type="text/javascript" src="js/mysteelseries-min-0.11.14.js"></script>
 	
 <style>
+
+body {
+    overflow:hidden;
+}
 
 #test {
      margin-right: 0px ;
    }
  
- #foot{
-  position: absolute;
-  top: 490px;
-  left:20px;
-  width:90%;
 
-}  
  
 #canvasRadial1{
   position: absolute;
-  width: 300px;
-  top: 77px;
+  width: 335px;
+  top: 85px;
   display: block;
   margin:0px auto;
   
 
 }  
  
-
- #lineRED{
-  position: absolute;
-  top: 350px;
-  width:90%;
-  left:10px;;
-}  
-
-#lineBLUE{
-  position: absolute;
-  top: 350px;
-  width:90%;
-  right:10px;;
-}  
- 
- 
 #grid{
   position: absolute;
-  top: 390px;
+  top: 430px;
   width:90%;
 }  
+
+
+#camera{
+  position: absolute;
+  top: 570px;
+  width:100%;
+}  
+
+#foot{
+  position: absolute;
+  top: 930px;
+  left:20px;
+  width:90%;
+}  
+
+
  #canvasLedUpdate {
   position: absolute;
   top: 0px;
@@ -131,44 +128,9 @@
 }
 
 
-#canvasLedGreen {
-  position: absolute;
-  top: 65px;
-  left:70px;;
-}
-#canvasLedGreen1 {
-  position: absolute;
-  top: 65px;
-  left:50px;;
-}
-#canvasLedGreen2 {
-  position: absolute;
-  top: 65px;
-  left:30px;;
-}
-#canvasLedGreen3 {
-  position: absolute;
-  top: 65px;
-  left:10px;;
-}
-#canvasLedGreen4 {
-  position: absolute;
-  top: 65px;
-  left:90px;;
-}
-#canvasLedGreen5 {
-  position: absolute;
-  top: 65px;
-  left:110px;;
-}
-
-
 </style>
 	
 </head>
-
-
-
 
 
 <script type="text/javascript">
@@ -206,10 +168,15 @@ function setWinDirSize(size)
         useColorLabels: false,
         digitalFont: false,
         });	
-		
-    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.WHITE);
-    winDirGauge.setFrameDesign(steelseries.FrameDesign.SHINY_METAL);
+    
+    
+    winDirGauge.setBackgroundColor(steelseries.BackgroundColor.BEIGE);
+    winDirGauge.setFrameDesign(steelseries.FrameDesign.STEEL);
 	winDirGauge.setPointerType(steelseries.PointerType.TYPE3);
+	
+	
+	//winDirGauge.setForegroundType(steelseries.ForegroundType.TYPE3);
+	//winDirGauge.setLcdColor(steelseries.LcdColor.BLUE_BLACK);
 
 
 }
@@ -217,7 +184,7 @@ function setWinDirSize(size)
 function init() {
 
 
-		WinDirSize	= 300;
+		WinDirSize	= 335;
 		setWinDirSize(WinDirSize);
 	   
 		ledUpdate = new steelseries.Led('canvasLedUpdate', {
@@ -298,7 +265,7 @@ function init() {
 function UpdateTime()
 {
 	//alert("pp");	
-	if ( data != null &&  data.last_measure_time != null ) {
+	if ( data != null && data.last_measure_time != null ) {
 		
 		var dif = getLastMeasureDelay(data.last_measure_time);
 		
@@ -320,6 +287,8 @@ function UpdateTime()
 		document.getElementById('last_measure_time').innerHTML =lastUpdate(data.last_measure_time)
 	}
 }
+
+
 
 
 function Update(data) {
@@ -404,9 +373,21 @@ function Update(data) {
 // }
 
 function updatedata(json) {
-	//alert("update");
+	//alert(json);
 	data = jQuery.parseJSON(json);
 	Update(data);
+}
+
+function updatecamera(src) {
+	//alert(src );
+	$("#cameraimg").attr('src', src);
+}
+
+function refreshcamera() {
+	var src = $("#cameraimg").attr('src') + '#' + new Date().getTime();;
+	console.log(src);
+	//$("#cameraimg").attr('src', 'image/no-immagine.jpg');
+	$("#cameraimg").attr('src', src);
 }
 
 function UpdateGauge()
@@ -565,9 +546,38 @@ function getLastMeasureDelay(updatedata)
 
   }  	
 	
+
 </script>
 
+<script>
+window.onscroll = function() {myFunction()};
+var scroll = 0;
+var  prevScrollTop = 0;
+function myFunction() {
+	
+	//alert(document.body.scrollTop);
+	dir = document.body.scrollTop - prevScrollTop;
+	
+	if ( dir > 0 )  {
+		//window.scrollTo(0,document.body.scrollHeight);
+		window.scrollTo(0,430);
+		//refreshcamera();
+		sctolled = 1;
+    }
+	if ( dir < 0 )  {
+		window.scrollTo(0,0);
+		sctolled = 0;
+    }
 
+	prevScrollTop = document.body.scrollTop;
+}
+
+
+
+</script>
+
+</body>
+</html>
 
 
 <body onload="init()" >
@@ -575,7 +585,7 @@ function getLastMeasureDelay(updatedata)
  
  
  
-<div data-role="page" data-theme="a">
+<div id="pagediv" data-role="page" data-theme="a" >
  
 		<div data-role="header" style="height:0px">
 			<h2><label id="lblTitle">Sint Wind PI</label></h2>
@@ -583,7 +593,7 @@ function getLastMeasureDelay(updatedata)
 	 
 		<div data-role="content">
 		
-			<ul data-role="listview" data-inset="true" data-divider-theme="b">
+			<ul data-role="listview" data-inset="true" data-divider-theme="c">
 				<li data-role="list-divider"> <span style="font-size:100%"> 
 				   <label  id="last_measure_time">time</label></span> 
 				   <canvas  id="canvasLedUpdate" width="40" height="40"></canvas>
@@ -606,16 +616,12 @@ function getLastMeasureDelay(updatedata)
 <!-- 			<canvas  id="canvasLedGreen4" width="40" height="40"></canvas> -->
 <!-- 			<canvas  id="canvasLedGreen5" width="40" height="40"></canvas> -->
 			
-			
-			
-			
-			
-			<div align="center"> 
+			<div align="center" vertical-align="top"> 
 			
 				<canvas  id="canvasRadial1"  width="280" height="280"></canvas>
 				
 			</div>
-			
+		
 			<div id="grid" class="ui-grid-d">
 				<div class="ui-block-a"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/temperatura.png" width="32" height"32"  ><br><label id="temp_out">temp</label> °C</div></div>
 				<div class="ui-block-b"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/blood-pressure-icon.png" width="32" height"32" > <br> <label id="pressure">pres</label> hPa</div></div>
@@ -623,17 +629,19 @@ function getLastMeasureDelay(updatedata)
 				<div class="ui-block-d"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/Status-weather-many-clouds-icon.png" width="32" height"32" > <br> <label id="cloudbase">cloudbase</label> m</div></div>
 				<div class="ui-block-e"><div class="ui-bar ui-bar-a" style="height:80px"><img src="image/rain-icon.png" width="32" height"32" > <br> <label id="rain_rate">rain</label> mm</div></div>
 
-				</div><!-- /grid-c -->
+			 </div><!-- /grid-c -->
+			 
+		
+
 		
 		
-		</div>
-	
 		 
-    <div id="foot" data-role="footer"> 
-        <h3>Powered by Sint Wind Pi </h3> 
-        
-    </div><!-- /footer -->
+<!--     <div id="foot" data-role="footer">  -->
+<!--         <h3>Powered by Sint Wind Pi </h3>  -->
+<!--     </div>/footer -->
     
+
+       
 </div><!-- /page -->
  
  
